@@ -1,0 +1,258 @@
+$comment
+Simulation of modulo 10 counter
+$end
+
+$date
+     Mar 26, 2014       08:40:31
+$end
+
+$version
+              SystemC 2.3.0-ASI --- Mar 19 2014 06:58:55
+$end
+
+$timescale
+     1 ns
+$end
+
+$scope module SystemC $end
+$var real    1  aaa  p       $end
+$var wire    1  aab  rst       $end
+$var wire    1  aac  u_d       $end
+$var wire    1  aad  ld       $end
+$var wire   32  aae  d_in [31:0]  $end
+$var wire   32  aaf  q_out [31:0]  $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+r10 aaa
+0aab
+0aac
+0aad
+b0 aae
+b1 aaf
+$end
+
+#10
+b10 aaf
+
+#20
+b11 aaf
+
+#30
+b100 aaf
+
+#40
+b101 aaf
+
+#50
+b110 aaf
+
+#60
+b111 aaf
+
+#70
+b1000 aaf
+
+#80
+b1001 aaf
+
+#90
+b0 aaf
+
+#100
+r5 aaa
+1aac
+b1 aaf
+
+#110
+b0 aaf
+
+#115
+b1001 aaf
+
+#120
+b1000 aaf
+
+#125
+b111 aaf
+
+#130
+b110 aaf
+
+#135
+b101 aaf
+
+#140
+b100 aaf
+
+#145
+b11 aaf
+
+#150
+1aad
+b100 aae
+b10 aaf
+
+#155
+b100 aaf
+
+#165
+0aad
+
+#170
+b11 aaf
+
+#175
+b10 aaf
+
+#180
+b1 aaf
+
+#185
+b0 aaf
+
+#190
+b1001 aaf
+
+#195
+b1000 aaf
+
+#200
+b111 aaf
+
+#205
+b110 aaf
+
+#210
+b101 aaf
+
+#215
+1aab
+b0 aaf
+
+#225
+r10 aaa
+0aab
+0aac
+b1 aaf
+
+#235
+b10 aaf
+
+#245
+b11 aaf
+
+#255
+b100 aaf
+
+#265
+b101 aaf
+
+#275
+b110 aaf
+
+#285
+b111 aaf
+
+#295
+b1000 aaf
+
+#305
+b1001 aaf
+
+#315
+b0 aaf
+
+#325
+r5 aaa
+1aac
+b1 aaf
+
+#335
+b0 aaf
+
+#340
+b1001 aaf
+
+#345
+b1000 aaf
+
+#350
+b111 aaf
+
+#355
+b110 aaf
+
+#360
+b101 aaf
+
+#365
+b100 aaf
+
+#370
+b11 aaf
+
+#375
+1aad
+b10 aaf
+
+#380
+b100 aaf
+
+#390
+0aad
+
+#395
+b11 aaf
+
+#400
+b10 aaf
+
+#405
+b1 aaf
+
+#410
+b0 aaf
+
+#415
+b1001 aaf
+
+#420
+b1000 aaf
+
+#425
+b111 aaf
+
+#430
+b110 aaf
+
+#435
+b101 aaf
+
+#440
+1aab
+b0 aaf
+
+#450
+r10 aaa
+0aab
+0aac
+b1 aaf
+
+#460
+b10 aaf
+
+#470
+b11 aaf
+
+#480
+b100 aaf
+
+#490
+b101 aaf
+

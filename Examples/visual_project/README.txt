@@ -123,3 +123,69 @@
 //// main.cpp
 //
 ////// 5.5.3 : Simple Process Simulation
+
+/**
+ * Chapter 6
+ */
+
+// test_concurrency
+//
+//// simple_process.h
+//
+////// 6.1.1 : Simple Process Structure
+//
+//// main.cpp
+//
+////// 6.1.2 : Simple Process Simulation
+
+// thread_example1
+//
+//// archi_ex.h
+//
+////// 6.2.1 : Architecture Structure
+//
+//// archi_ex.cpp
+//
+////// 6.2.2 : Architecture Implementation
+//
+//// main.cpp
+//
+////// 6.2.3 : Architecture Simulation
+
+// thread_example2
+//
+//// test.h
+//
+////// 6.3.1 : Test Structure
+//
+//// test.cpp
+//
+////// 6.3.2 : Test Implementation
+//
+//// main.cpp
+//
+////// 6.3.3 : Test Simulation
+
+// cthread_example
+//
+//// counter.h
+//
+////// 6.4.1 : Counter Structure
+//
+//// main.cpp
+//
+////// 6.4.2 : Counter Simulation
+
+// dynamic_threads
+//
+//// simple_spawn.h
+//
+////// 6.5.1 : Simple Spawn Structure
+//
+//// main.cpp
+//
+////// 6.5.2 : Simple Spawn Implementation
+//
+//// main.cpp
+//
+////// 6.5.3 : Simple Spawn Simulation

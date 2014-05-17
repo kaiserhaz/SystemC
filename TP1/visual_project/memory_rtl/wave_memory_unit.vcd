@@ -1,0 +1,412 @@
+$comment
+Simulation of an RTL-described memory
+$end
+
+$date
+     Feb 16, 2014       11:44:33
+$end
+
+$version
+              SystemC 2.3.0-ASI --- Nov 16 2013 08:16:54
+$end
+
+$timescale
+     1 ns
+$end
+
+$scope module SystemC $end
+$var wire    1  aaa  clk       $end
+$var wire    1  aab  enable       $end
+$var wire    1  aac  rd       $end
+$var wire    1  aad  wr       $end
+$var wire    4  aae  addr [3:0]  $end
+$var wire    8  aaaaf  data_in [7:0]  $end
+$var wire    8  aaaag  data_out [7:0]  $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+1aaa
+0aab
+0aac
+0aad
+b0 aae
+b11111111 aaaaf
+bXXXXXXXX aaaag
+$end
+
+#500
+0aaa
+bZZZZZZZZ aaaag
+
+#1000
+1aaa
+
+#1500
+0aaa
+
+#2000
+1aaa
+
+#2500
+0aaa
+
+#3000
+1aaa
+
+#3500
+0aaa
+
+#4000
+1aaa
+
+#4500
+0aaa
+
+#5000
+1aaa
+
+#5500
+0aaa
+
+#6000
+1aaa
+
+#6500
+0aaa
+
+#7000
+1aaa
+
+#7500
+0aaa
+
+#8000
+1aaa
+
+#8500
+0aaa
+
+#9000
+1aaa
+
+#9500
+0aaa
+
+#10000
+1aaa
+1aab
+
+#10500
+0aaa
+
+#11000
+1aaa
+1aad
+
+#11500
+0aaa
+
+#12000
+1aaa
+b0 aaaaf
+
+#12500
+0aaa
+
+#13000
+1aaa
+b1 aae
+b1 aaaaf
+
+#13500
+0aaa
+
+#14000
+1aaa
+b10 aae
+b10 aaaaf
+
+#14500
+0aaa
+
+#15000
+1aaa
+b11 aae
+b11 aaaaf
+
+#15500
+0aaa
+
+#16000
+1aaa
+b100 aae
+b100 aaaaf
+
+#16500
+0aaa
+
+#17000
+1aaa
+b101 aae
+b101 aaaaf
+
+#17500
+0aaa
+
+#18000
+1aaa
+b110 aae
+b110 aaaaf
+
+#18500
+0aaa
+
+#19000
+1aaa
+b111 aae
+b111 aaaaf
+
+#19500
+0aaa
+
+#20000
+1aaa
+b1000 aae
+b1000 aaaaf
+
+#20500
+0aaa
+
+#21000
+1aaa
+b1001 aae
+b1001 aaaaf
+
+#21500
+0aaa
+
+#22000
+1aaa
+b1010 aae
+b1010 aaaaf
+
+#22500
+0aaa
+
+#23000
+1aaa
+b1011 aae
+b1011 aaaaf
+
+#23500
+0aaa
+
+#24000
+1aaa
+b1100 aae
+b1100 aaaaf
+
+#24500
+0aaa
+
+#25000
+1aaa
+b1101 aae
+b1101 aaaaf
+
+#25500
+0aaa
+
+#26000
+1aaa
+b1110 aae
+b1110 aaaaf
+
+#26500
+0aaa
+
+#27000
+1aaa
+b1111 aae
+b1111 aaaaf
+
+#27500
+0aaa
+
+#28000
+1aaa
+1aac
+0aad
+
+#28500
+0aaa
+b1111 aaaag
+
+#29000
+1aaa
+b0 aae
+
+#29500
+0aaa
+b0 aaaag
+
+#30000
+1aaa
+b1 aae
+
+#30500
+0aaa
+b1 aaaag
+
+#31000
+1aaa
+b10 aae
+
+#31500
+0aaa
+b10 aaaag
+
+#32000
+1aaa
+b11 aae
+
+#32500
+0aaa
+b11 aaaag
+
+#33000
+1aaa
+b100 aae
+
+#33500
+0aaa
+b100 aaaag
+
+#34000
+1aaa
+b101 aae
+
+#34500
+0aaa
+b101 aaaag
+
+#35000
+1aaa
+b110 aae
+
+#35500
+0aaa
+b110 aaaag
+
+#36000
+1aaa
+b111 aae
+
+#36500
+0aaa
+b111 aaaag
+
+#37000
+1aaa
+b1000 aae
+
+#37500
+0aaa
+b1000 aaaag
+
+#38000
+1aaa
+b1001 aae
+
+#38500
+0aaa
+b1001 aaaag
+
+#39000
+1aaa
+b1010 aae
+
+#39500
+0aaa
+b1010 aaaag
+
+#40000
+1aaa
+b1011 aae
+
+#40500
+0aaa
+b1011 aaaag
+
+#41000
+1aaa
+b1100 aae
+
+#41500
+0aaa
+b1100 aaaag
+
+#42000
+1aaa
+b1101 aae
+
+#42500
+0aaa
+b1101 aaaag
+
+#43000
+1aaa
+b1110 aae
+
+#43500
+0aaa
+b1110 aaaag
+
+#44000
+1aaa
+b1111 aae
+
+#44500
+0aaa
+b1111 aaaag
+
+#45000
+1aaa
+0aab
+0aac
+b0 aae
+b0 aaaaf
+
+#45500
+0aaa
+bZZZZZZZZ aaaag
+
+#46000
+1aaa
+
+#46500
+0aaa
+
+#47000
+1aaa
+
+#47500
+0aaa
+
+#48000
+1aaa
+
+#48500
+0aaa
+
+#49000
+1aaa
+
+#49500
+0aaa
+

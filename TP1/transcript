@@ -1,0 +1,55 @@
+# Reading C:/Modeltech_pe_edu_10.2c/tcl/vsim/pref.tcl 
+# OpenFile C:/Users/user/Desktop/Dropbox/Cours/SystemC/TP1/counter.mpf 
+# Loading project counter
+# Compile of four_bit_counter.vhd was successful.
+# Compile of test_four_bit_counter.vhd was successful.
+# 2 compiles, 0 failed with no errors. 
+vsim -voptargs=+acc work.test_four_bit_counter(testbench)
+# //  ModelSim PE Student Edition 10.2c Jul 18 2013 
+# //
+# //  Copyright 1991-2013 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION
+# //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
+# //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
+# //
+# // NOT FOR CORPORATE OR PRODUCTION USE.
+# // THE ModelSim PE Student Edition IS NOT A SUPPORTED PRODUCT.
+# // FOR HIGHER EDUCATION PURPOSES ONLY
+# //
+# vsim -voptargs=+acc work.test_four_bit_counter(testbench) 
+# Loading std.standard
+# Refreshing C:/Users/user/Desktop/Dropbox/Cours/SystemC/TP1/work.test_four_bit_counter(testbench)
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading work.test_four_bit_counter(testbench)
+# Loading work.four_bit_counter(behaviour)
+add wave -r /*
+run
+quit -sim
+do run.tcl
+# Model Technology ModelSim PE Student Edition vcom 10.2c Compiler 2013.07 Jul 18 2013
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package STD_LOGIC_UNSIGNED
+# -- Compiling entity four_bit_counter
+# -- Compiling architecture behaviour of four_bit_counter
+# -- Compiling entity four_bit_counter
+# -- Compiling architecture behaviour of four_bit_counter
+# -- Compiling entity test_four_bit_counter
+# -- Compiling architecture testbench of test_four_bit_counter
+# -- Loading entity four_bit_counter
+# ** Error: SystemC is not supported on win32pe_edu.
+# Error in macro ./run.tcl line 15
+# SystemC is not supported on win32pe_edu.
+#     while executing
+# "scgenmod four_bit_counter > four_bit_counter.h"
+scgenmod
+# SystemC is not supported on win32pe_edu.
+sccom
+# SystemC is not supported on win32pe_edu.
