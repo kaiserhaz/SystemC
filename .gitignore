@@ -40,6 +40,11 @@ local.properties
 *.suo
 *.user
 *.sln.docstates
+*.sln
+*.sdf
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
 
 # Build results
 
@@ -218,3 +223,11 @@ pip-log.txt
 ## Documents
 ############
 *.pdf
+
+############
+## Others
+############
+*.vcd
+*.wlf
+work/
+Examples/visual_project/
