@@ -92,7 +92,7 @@ int sc_main(int argc, char* argv[]) {
 	// Tracefile setup
 	sc_trace_file *tf = sc_create_vcd_trace_file("wave_mbus_trans");
 	sc_write_comment(tf, "Simulation of MBus Transaction");
-	((vcd_trace_file*)tf)->set_time_unit(1, SC_US);
+	tf->set_time_unit(1, SC_US);
 
 	sc_trace(tf, test_bus, "test_bus");
 

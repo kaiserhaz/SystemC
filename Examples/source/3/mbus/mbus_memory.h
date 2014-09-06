@@ -15,15 +15,15 @@
 #include "mbus.h"
 
 /**
- * MBus Transactor Module
+ * MBus Memory Module
  */
 SC_MODULE( mbus_memory ) {
 
-	/** MBus Memory ports **/
-	sc_in<bool> mbus_rw_;
-	sc_in< sc_uint<ADDR_WIDTH> > mbus_addr_;
-	sc_in< sc_uint<DATA_WIDTH> > mbus_data_in_;
-	sc_out< sc_uint<DATA_WIDTH> > mbus_data_out_;
+	/** MBus Memory Ports **/
+	sc_in<bool> mbus_rw_;                         // Read/Write signal
+	sc_in< sc_uint<ADDR_WIDTH> > mbus_addr_;      // Address
+	sc_in< sc_uint<DATA_WIDTH> > mbus_data_in_;   // Data In
+	sc_out< sc_uint<DATA_WIDTH> > mbus_data_out_; // Data Out
 
 	/** MBus Memory cases **/
 	sc_uint<DATA_WIDTH>* mbus_mem_case_;

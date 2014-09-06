@@ -42,7 +42,7 @@ mbus_memory::~mbus_memory() { delete[] mbus_mem_case_; }
 void mbus_memory::mbus_mem_thread_(void) {
 
 	// Main loop
-	while(true) {
+	while( true ) {
 
 		// Wait on changes in address or data
 		wait( mbus_addr_->default_event() | mbus_data_in_->default_event() );

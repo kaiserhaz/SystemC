@@ -38,7 +38,7 @@
 //
 //// main.cpp
 //
-////// 3.2.6 : MBus Example Simulation and Trace (main)
+////// 3.2.6 : MBus Example Simulation and Trace
 
 /**
  * Chapter 4 
@@ -189,3 +189,99 @@
 //// main.cpp
 //
 ////// 6.5.3 : Simple Spawn Simulation
+
+/**
+ * Chapter 7
+ */
+
+// semaphore
+//
+//// testsem.h
+//
+////// 7.1.1 : testsem Structure
+//
+//// main.cpp
+//
+////// 7.1.2 : testsem Simulation
+
+// fifo
+//
+//// producer.h
+//
+////// 7.2.1 : Producer Structure
+//
+//// consumer.h
+//
+////// 7.2.2 : Consumer Structure
+//
+//// main.cpp
+//
+////// 7.2.3 : Fifo Simulation
+
+// signal
+//
+//// signal.h
+//
+////// 7.3.1 : Signal Definition
+//
+//// signal.cpp
+//
+////// 7.3.2 : Signal Implementation
+//
+//// main.cpp
+//
+////// 7.3.3 : Signal Simulation
+
+// signal_resolved
+//
+//// signal_resolved.h
+//
+////// 7.4.1 : Signal Resolved Definition
+//
+//// main.cpp
+//
+////// 7.4.2 : Signal Resolved Simulation
+
+// trace
+//
+//// main.cpp
+//
+////// 7.5 : Tracing
+
+/**
+ * Chapter 8
+ */
+ 
+/** NO EXAMPLES **/
+
+/**
+ * Chapter 9
+ */
+
+// port_ex
+//
+//// modA.h
+//
+////// 9.1.1 : modA Structure
+//
+//// modB.h
+//
+////// 9.1.2 : modB Structure
+//
+//// main.cpp
+//
+////// 9.1.3 : Port Simulation
+
+// static_port_sensitivity
+//
+//// my_port_sc_signal_in_if_bool.h
+//
+////// 9.2.1 : MyPort Structure
+//
+//// modA.h
+//
+////// 9.2.2 : modA Structure
+//
+//// main.cpp
+//
+////// 9.2.3 : Static Port Sensitivity Simulation

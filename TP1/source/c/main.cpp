@@ -11,7 +11,7 @@ int sc_main(int argc, char* argv[])
 
 	sc_trace_file *tf = sc_create_vcd_trace_file("wave_memory_unit");
 	sc_write_comment(tf, "Simulation of an RTL-described memory");
-	((vcd_trace_file*)tf)->set_time_unit(1, SC_NS);	// 10exp(-9) = 1 ns
+	tf->set_time_unit(1, SC_NS);	// 10exp(-9) = 1 ns
 
 	cout << " Trace file setup complete " << endl;
 

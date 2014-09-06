@@ -20,7 +20,7 @@
  */
 SC_MODULE( mbus_transactor ) {
 
-	/** MBus Transactor ports **/
+	/** MBus Transactor Ports **/
 	sc_in<mbus> trans_bus_;
 
 	/** MBus Transactor Submodules **/

@@ -51,7 +51,7 @@ void mbus_transactor::trans_thread_(void) {
 	protect = true;
 
 	// Main loop
-	while(true) {
+	while( true ) {
 
 		// Wait for transaction (wait on default event (or value-change event))
 		wait( trans_bus_->default_event() );

@@ -17,7 +17,7 @@
 /**
  * Constants
  */
-const int ADDR_WIDTH = 8;
+const int ADDR_WIDTH = 8; // /!\ A width of 20 takes a whole night to simulate on Intel Celeron!
 const int DATA_WIDTH = 8;
 
 /**
@@ -100,4 +100,3 @@ inline void sc_trace (sc_trace_file *tf, const mbus& arg, const std::string& nam
 }
 
 #endif
-
