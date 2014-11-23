@@ -285,3 +285,117 @@
 //// main.cpp
 //
 ////// 9.2.3 : Static Port Sensitivity Simulation
+
+// port_array
+//
+//// producer.h
+//
+////// 9.3.1 : Producer Structure
+//
+//// consumer.h
+//
+////// 9.3.2 : Consumer Structure
+//
+//// broadcast.h
+//
+////// 9.3.3 : Broadcast Channel Structure
+//
+//// main.cpp
+//
+////// 9.3.4 : Port Array Simulation
+
+// export_ex
+//
+//// clock_gen.h
+//
+////// 9.4.1 : Clock Gen Structure
+//
+//// monitor.h
+//
+////// 9.4.2 : Monitor Structure
+//
+//// main.cpp
+//
+////// 9.4.3 : Export Simulation
+
+/**
+ * Chapter 10
+ */
+
+// my_interrupt
+//
+//// my_interrupt_in_if.h
+//
+////// 10.1.1 : my_interrupt Input Interface
+//
+//// my_interrupt_out_if.h
+//
+////// 10.1.2 : my_interrupt Output Interface
+//
+//// my_interrupt.h
+//
+////// 10.1.3 : my_interrupt Channel
+//
+//// peripheral.h
+//
+////// 10.1.4 : Peripheral Module
+//
+//// processor.h
+//
+////// 10.1.5 : Processor Module
+//
+//// test_interrupt.h
+//
+////// 10.1.6 : my_interrupt Test Scenario
+//
+//// test_interrupt.cpp
+//
+////// 10.1.7 : my_interrupt Test Scenario Implementation
+//
+//// main.cpp
+//
+////// 10.1.8 : my_interrupt main
+
+// pci_datatype
+//
+//// pcix_trans.h
+//
+////// 10.2.1 : PCI Transfer
+//
+//// pcix_trans.cpp
+//
+////// 10.2.2 : PCI Transfer Implementation
+//
+//// pcix_component.h
+//
+////// 10.2.3 : PCI Component
+//
+//// pcix_component.cpp
+//
+////// 10.2.4 : PCI Component Implementation
+//
+//// main.cpp
+//
+////// 10.2.5 : PCIX main
+
+// hierarchical_channel
+//
+//// generator_if.h
+//
+////// 10.3.1 : Generator Interface
+//
+//// generator.h
+//
+////// 10.3.2 : Generator Channel
+//
+//// generator.cpp
+//
+////// 10.3.3 : Generator Channel Implementation
+//
+//// test_generator.h
+//
+////// 10.3.4 : Test Generator
+//
+//// main.cpp
+//
+////// 10.3.5 : Generator main

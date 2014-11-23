@@ -19,6 +19,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "class_hierarchies", "class_
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B6835748-03E3-467D-BE47-97660D695EF3}"
 	ProjectSection(SolutionItems) = preProject
+		GUIDELINE.txt = GUIDELINE.txt
 		README.txt = README.txt
 	EndProjectSection
 EndProject
@@ -49,6 +50,16 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "port_ex", "port_ex\port_ex.vcxproj", "{77D598EB-0765-4409-AF79-4F3948DDFBFB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "static_port_sensitivity", "static_port_sensitivity\static_port_sensitivity.vcxproj", "{4A290EF3-37C7-455F-B53F-A649A13CD615}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "port_array", "port_array\port_array.vcxproj", "{8D949AEA-AB27-47D7-8A54-FDFDAB9C31CA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "export_ex", "export_ex\export_ex.vcxproj", "{E6D0113D-7555-4FAE-8F73-EAB927CF7AC1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "my_interrupt", "my_interrupt\my_interrupt.vcxproj", "{ED203F90-2687-4719-97B4-2FF1FC7828F9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pci_datatype", "pci_datatype\pci_datatype.vcxproj", "{908EAD0B-05DC-460B-A05D-ADA8EECAAB56}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hierarchical_channel", "hierarchical_channel\hierarchical_channel.vcxproj", "{5E9055FA-1B56-424A-AF52-626B78DEF1EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,6 +155,26 @@ Global
 		{4A290EF3-37C7-455F-B53F-A649A13CD615}.Debug|Win32.Build.0 = Debug|Win32
 		{4A290EF3-37C7-455F-B53F-A649A13CD615}.Release|Win32.ActiveCfg = Release|Win32
 		{4A290EF3-37C7-455F-B53F-A649A13CD615}.Release|Win32.Build.0 = Release|Win32
+		{8D949AEA-AB27-47D7-8A54-FDFDAB9C31CA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8D949AEA-AB27-47D7-8A54-FDFDAB9C31CA}.Debug|Win32.Build.0 = Debug|Win32
+		{8D949AEA-AB27-47D7-8A54-FDFDAB9C31CA}.Release|Win32.ActiveCfg = Release|Win32
+		{8D949AEA-AB27-47D7-8A54-FDFDAB9C31CA}.Release|Win32.Build.0 = Release|Win32
+		{E6D0113D-7555-4FAE-8F73-EAB927CF7AC1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E6D0113D-7555-4FAE-8F73-EAB927CF7AC1}.Debug|Win32.Build.0 = Debug|Win32
+		{E6D0113D-7555-4FAE-8F73-EAB927CF7AC1}.Release|Win32.ActiveCfg = Release|Win32
+		{E6D0113D-7555-4FAE-8F73-EAB927CF7AC1}.Release|Win32.Build.0 = Release|Win32
+		{ED203F90-2687-4719-97B4-2FF1FC7828F9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ED203F90-2687-4719-97B4-2FF1FC7828F9}.Debug|Win32.Build.0 = Debug|Win32
+		{ED203F90-2687-4719-97B4-2FF1FC7828F9}.Release|Win32.ActiveCfg = Release|Win32
+		{ED203F90-2687-4719-97B4-2FF1FC7828F9}.Release|Win32.Build.0 = Release|Win32
+		{908EAD0B-05DC-460B-A05D-ADA8EECAAB56}.Debug|Win32.ActiveCfg = Debug|Win32
+		{908EAD0B-05DC-460B-A05D-ADA8EECAAB56}.Debug|Win32.Build.0 = Debug|Win32
+		{908EAD0B-05DC-460B-A05D-ADA8EECAAB56}.Release|Win32.ActiveCfg = Release|Win32
+		{908EAD0B-05DC-460B-A05D-ADA8EECAAB56}.Release|Win32.Build.0 = Release|Win32
+		{5E9055FA-1B56-424A-AF52-626B78DEF1EE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5E9055FA-1B56-424A-AF52-626B78DEF1EE}.Debug|Win32.Build.0 = Debug|Win32
+		{5E9055FA-1B56-424A-AF52-626B78DEF1EE}.Release|Win32.ActiveCfg = Release|Win32
+		{5E9055FA-1B56-424A-AF52-626B78DEF1EE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

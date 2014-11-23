@@ -17,8 +17,8 @@
 /**
  * Constants
  */
-const int ADDR_WIDTH = 8; // /!\ A width of 20 takes a whole night to simulate on Intel Celeron!
-const int DATA_WIDTH = 8;
+const int ADDR_WIDTH = 8; // Address width /!\ A width of 20 takes a whole night to simulate on Intel Celeron!
+const int DATA_WIDTH = 8; // Data width
 
 /**
  * MBus Structure Definition
