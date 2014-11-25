@@ -25,8 +25,8 @@
 //
 //----------------------------------------------------------------------
 
+#define _USE_MATH_DEFINES
 #include "sin_source_with_noise.h"
-
 #include <cstdlib> // for std::rand
 #include <cmath>   // for M_PI, std::sin, std::sqrt, and std::log
 

@@ -46,7 +46,7 @@ int sc_main(int argn,char* argc[])
   adc1.out(sig_3);
 
   sca_trace_file* tfp =
-    sca_create_tabular_trace_file("tb_lab2c.dat");
+    sca_create_vcd_trace_file("tb_lab2c");
 
   sca_trace(tfp, sig_1, "sig_1");
   sca_trace(tfp, sig_2, "sig_2");
@@ -54,8 +54,14 @@ int sc_main(int argn,char* argc[])
 
   sc_start(5.0, SC_MS);
 
-  tfp->reopen("tb_ac_lab2c.dat");
+  sca_close_vcd_trace_file(tfp);
+
+  tfp = sca_create_tabular_trace_file("tb_ac_lab2c.dat");
   tfp->set_mode(sca_ac_format(sca_util::SCA_AC_DB_DEG));
+
+  sca_trace(tfp, sig_1, "sig_1");
+  sca_trace(tfp, sig_2, "sig_2");
+  sca_trace(tfp, sig_3, "sig_3");
 
   sca_ac_start(1.0, 1e6, 1000, SCA_LOG);
 

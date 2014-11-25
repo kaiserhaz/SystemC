@@ -25,6 +25,7 @@
 //
 //----------------------------------------------------------------------
 
+#define _USE_MATH_DEFINES
 #include "sin_source_with_noise.h"
 
 #include <cstdlib> // for std::rand

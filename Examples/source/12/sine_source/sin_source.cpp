@@ -25,6 +25,7 @@
 //
 //----------------------------------------------------------------------
 
+#define _USE_MATH_DEFINES
 #include "sin_source.h"
 #include <cmath>                                      // for M_PI and std::sin
 
@@ -39,4 +40,3 @@ void sin_source::processing()                         // Describe time-domain be
   double x = ampl * std::sin(2.0 * M_PI * freq * t);  // Calculate sine wave
   out.write(x);                                       // Write sample to the output
 }
-

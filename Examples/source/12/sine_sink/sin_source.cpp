@@ -25,6 +25,7 @@
 //
 //----------------------------------------------------------------------
 
+#define _USE_MATH_DEFINES
 #include "sin_source.h"
 #include <cmath>                                      // for M_PI and std::sin
 

@@ -25,6 +25,7 @@
 //
 //----------------------------------------------------------------------
 
+#define _USE_MATH_DEFINES
 #include "prefilter.h"
 
 prefilter::prefilter(sc_core::sc_module_name nm)

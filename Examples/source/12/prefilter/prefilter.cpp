@@ -25,7 +25,9 @@
 //
 //----------------------------------------------------------------------
 
+#define _USE_MATH_DEFINES
 #include "prefilter.h"
+#include <cmath>   // for M_PI, std::sin, std::sqrt, and std::log
 
 prefilter::prefilter(sc_core::sc_module_name nm)
 {

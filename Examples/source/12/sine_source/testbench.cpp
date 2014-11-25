@@ -35,13 +35,13 @@ int sc_main(int argn, char* argc[])          // SystemC main program
     src_1.out(sig_1);                        // Connect (bind) with signal
 
   sca_trace_file* tfp =                      // Open trace file
-    sca_create_tabular_trace_file("testbench");
+    sca_create_vcd_trace_file("testbench");
 
   sca_trace(tfp, sig_1, "sig_1");            // Define which signal to trace
 
   sc_start(10.0, SC_MS);                     // Start simulation for 100 ms
 
-  sca_close_tabular_trace_file(tfp);         // Close trace file
+  sca_close_vcd_trace_file(tfp);             // Close trace file
 
   return 0;                                  // Exit with return code 0
 }
