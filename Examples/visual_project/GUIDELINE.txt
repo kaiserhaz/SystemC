@@ -1,0 +1,87 @@
+/******************************
+ * SystemC Style Guideline
+ * By Kaiser Haz
+ */
+
+/** Disclaimer **/
+
+/**
+ * First of all, this is not a standardized (or so I think) coding style
+ * This is the style that I chose to adopt while coding all the tutorials
+ *  and examples found in this compilation
+ * And hopefully this will be the style that I adopt for the rest of the
+ *  SystemC codes that I do
+ * SystemC is owned by Accellera Systems Initiative and standardized
+ *  as IEEE 1666
+ */
+
+/******************************************************************************
+ ******************************************************************************
+ * Kaiser Haz's SystemC/C++ Style Guideline * **  ***   ****    *****     *****
+ ******************************************************************************
+ ******************************************************************************
+ */
+
+/**
+ * Contents
+ *
+ * Part I : File
+ *  Section A : Naming Convention
+ *  Section B : Type
+ *
+ * Part II : Code
+ *  Section A : Generalities
+ *  Section B : Styling
+ *  Section C : Naming
+ *  Section D : Comments
+ *
+ * Part III : Directory
+ *  Section A : Naming Convention
+ *  Section B : Structure
+ */
+
+
+
+/******************************************************************************
+ */
+
+
+
+/** Part I : File **/
+
+/*** Section A : Naming Convention ***/
+
+/**
+ * All file names must contain alphanumeric characters only
+ * All file names must begin with a small-case letter
+ * All numbers in file names must collate with the preceding letter (eg. my1)
+ * All file names must not contain spaces: use "_" instead
+ * All custom files intended to be integrated into the SystemC framework, but
+ *  is not part of the SystemC standard (eg. prim chans, base mods, etc.) must
+ *  use the prefix "my_"
+ * All text files must use capital letters
+ */
+
+/*** Section B : Type ***/
+
+/**
+ * SystemC modules, whether implemented directly or indirectly, must be
+ *  described in a header file (.h)
+ * SystemC module implementations, in case of a direct approach, must be
+ *  described in a normal file (.cpp)
+ * Any files containing data to be processed must be stored in a normal
+ *  text-based file (no extension, .dat or .txt)
+ * In particular cases, the rule directly above can be ignored, under the
+ *  condition that it is absolutely necessary to do so
+ */
+
+
+
+/******************************************************************************
+ */
+
+
+
+/** Part II : Code **/
+
+/*** Section A : A ***/

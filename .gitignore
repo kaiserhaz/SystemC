@@ -45,6 +45,7 @@ local.properties
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+*.cd
 
 # Build results
 
@@ -230,5 +231,4 @@ pip-log.txt
 *.vcd
 *.wlf
 work/
-Examples/visual_project/
 Documents/

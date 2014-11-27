@@ -2,6 +2,7 @@
  * SystemC Examples
  * Extracted from lectures by
  * Dr. Fabrice MULLER
+ * and DVCON labs
  */
 
 /**
@@ -416,7 +417,36 @@
  * Chapter 11
  */
 
+// master_slave
 //
+// *** Modified from an example of TLM1
+// *** Some sourcery has been performed
+// ***  on the code, not sure what effect
+// ***  it has, but it works
+//
+//// basic_if.h
+//
+////// 11.1 : Basic Interface
+//
+//// basic_initiator_port.h
+//
+////// 11.2 : Basic Initiator Port
+//
+//// basic_slave_base.h
+//
+////// 11.3 : Basic Slave Base
+//
+//// master.h
+//
+////// 11.4 : Master Module
+//
+//// slave.h
+//
+////// 11.5 : Slave Module
+//
+//// main.cpp
+//
+////// 11.6 : TLM1 Example
 
 /**
  * Chapter 12
