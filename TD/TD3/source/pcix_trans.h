@@ -1,5 +1,5 @@
 /**
- * 10.2.1 : PCI Transfer
+ * PCI Transfer
  */
 
 /**
@@ -28,7 +28,7 @@ struct pcix_trans {
 
 	// Constructors
 	pcix_trans() : devnum(-1), addr(-1), cmnd(-1), attr1(-1),
-		           attr2(-1), done(false)
+		           attr2(-1), done(true)
 	{
 
 		for(unsigned i=0; i!=8; i++) data[i] = 0;

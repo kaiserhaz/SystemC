@@ -94,7 +94,7 @@ sc_main (int argc, char *argv[])
   st1->seed_o (seed_i);
   st1->number_i (number_o);
 
-  sc_start (-1);
+  sc_start ();
 
   return 0;
 

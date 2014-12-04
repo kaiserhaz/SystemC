@@ -452,164 +452,164 @@
  * Chapter 12
  */
 
- // sine_source
- //
- //// sin_source.h
- //
- ////// Sine Source Header
- //
- //// sin_source.cpp
- //
- ////// Sine Source Body
- //
- //// testbench.cpp
- //
- ////// Testbench
+// sine_source
+//
+//// sin_source.h
+//
+////// Sine Source Header
+//
+//// sin_source.cpp
+//
+////// Sine Source Body
+//
+//// testbench.cpp
+//
+////// Testbench
 
- // sine_sink
- //
- //// sin_source.h
- //
- ////// Sine Source Header
- //
- //// sin_source.cpp
- //
- ////// Sine Source Body
- //
- //// sink.h
- //
- ////// Sink Header
- //
- //// sink.cpp
- //
- ////// Sink Body
- //
- //// testbench.cpp
- //
- ////// Testbench
+// sine_sink
+//
+//// sin_source.h
+//
+////// Sine Source Header
+//
+//// sin_source.cpp
+//
+////// Sine Source Body
+//
+//// sink.h
+//
+////// Sink Header
+//
+//// sink.cpp
+//
+////// Sink Body
+//
+//// testbench.cpp
+//
+////// Testbench
 
- // sine_noise
- //
- //// sin_source_with_noise.h
- //
- ////// Noisy Sine Header
- //
- //// sin_source_with_noise.cpp
- //
- ////// Noisy Sine Body
- //
- //// sink.h
- //
- ////// Sink header
- //
- //// sink.cpp
- //
- ////// Sink Body
- //
- //// testbench.cpp
- //
- ////// Testbench
+// sine_noise
+//
+//// sin_source_with_noise.h
+//
+////// Noisy Sine Header
+//
+//// sin_source_with_noise.cpp
+//
+////// Noisy Sine Body
+//
+//// sink.h
+//
+////// Sink header
+//
+//// sink.cpp
+//
+////// Sink Body
+//
+//// testbench.cpp
+//
+////// Testbench
 
- // sine_noise2
- //
- //// sin_source_with_noise.h
- //
- ////// Noisy Sine Header
- //
- //// sin_source_with_noise.cpp
- //
- ////// Noisy Sine Body
- //
- //// tb_lab2a.cpp
- //
- ////// Testbench
+// sine_noise2
+//
+//// sin_source_with_noise.h
+//
+////// Noisy Sine Header
+//
+//// sin_source_with_noise.cpp
+//
+////// Noisy Sine Body
+//
+//// tb_lab2a.cpp
+//
+////// Testbench
 
- // prefilter
- //
- //// sin_source_with_noise.h
- //
- ////// Noisy Sine Header
- //
- //// sin_source_with_noise.cpp
- //
- ////// Noisy Sine Body
- //
- //// prefilter.h
- //
- ////// Prefilter Header
- //
- //// prefilter.cpp
- //
- ////// Prefilter Body
- //
- //// tb_lab2b.cpp
- //
- ////// Testbench
+// prefilter
+//
+//// sin_source_with_noise.h
+//
+////// Noisy Sine Header
+//
+//// sin_source_with_noise.cpp
+//
+////// Noisy Sine Body
+//
+//// prefilter.h
+//
+////// Prefilter Header
+//
+//// prefilter.cpp
+//
+////// Prefilter Body
+//
+//// tb_lab2b.cpp
+//
+////// Testbench
 
- // adc
- //
- //// adc_sd.h
- //
- ////// ADC header
- //
- //// adc_sd.cpp
- //
- ////// ADC Body
- //
- //// prefilter.h
- //
- ////// Prefilter Header
- //
- //// prefilter.cpp
- //
- ////// Prefilter Body
- //
- //// sin_source_with_noise.h
- //
- ////// Noisy Sine Header
- //
- //// sin_source_with_noise.cpp
- //
- ////// Noisy Sine Body
- //
- //// tb_lab2c.cpp
- //
- ////// Testbench
+// adc
+//
+//// adc_sd.h
+//
+////// ADC header
+//
+//// adc_sd.cpp
+//
+////// ADC Body
+//
+//// prefilter.h
+//
+////// Prefilter Header
+//
+//// prefilter.cpp
+//
+////// Prefilter Body
+//
+//// sin_source_with_noise.h
+//
+////// Noisy Sine Header
+//
+//// sin_source_with_noise.cpp
+//
+////// Noisy Sine Body
+//
+//// tb_lab2c.cpp
+//
+////// Testbench
 
- // comb_filter
- //
- //// adc_sd.h
- //
- ////// ADC Header
- //
- //// adc_sd.cpp
- //
- ////// ADC Body
- //
- //// comb_filter.h
- //
- ////// Comb Filter Header
- //
- //// comb_filter.cpp
- //
- ////// Comb Filter Body
- //
- //// prefilter.h
- //
- ////// Prefilter Header
- //
- //// prefilter.cpp
- //
- ////// Prefilter Body
- //
- //// sin_source_with_noise.h
- //
- ////// Noisy Sine Header
- //
- //// sin_source_with_noise.cpp
- //
- ////// Noisy Sine Body
- //
- //// tb_lab2d.cpp
- //
- ////// Testbench
+// comb_filter
+//
+//// adc_sd.h
+//
+////// ADC Header
+//
+//// adc_sd.cpp
+//
+////// ADC Body
+//
+//// comb_filter.h
+//
+////// Comb Filter Header
+//
+//// comb_filter.cpp
+//
+////// Comb Filter Body
+//
+//// prefilter.h
+//
+////// Prefilter Header
+//
+//// prefilter.cpp
+//
+////// Prefilter Body
+//
+//// sin_source_with_noise.h
+//
+////// Noisy Sine Header
+//
+//// sin_source_with_noise.cpp
+//
+////// Noisy Sine Body
+//
+//// tb_lab2d.cpp
+//
+////// Testbench

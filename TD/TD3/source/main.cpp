@@ -1,27 +1,25 @@
 /**
- * 10.2.5 : PCIX main
+ * PCIX main
  */
 
 /**
  * Includes
  */
-#include <systemc.h>
-#include "pcix_component.h"
+#include "pcix_master.h"
+#include "pcix_slave.h"
 
 int sc_main(int argc, char* argv[]) {
 
 	sc_set_time_resolution(1, SC_NS);
 
-	pcix_component pcix_0("pcix_0");
+	pcix_master* pcix_m_0 = new pcix_master("pcix_m_0");
+	pcix_slave* pcix_s_0 = new pcix_slave("pcix_s_0");
+	pcix_bus* pcix_b_0 = new pcix_bus("pcix_b_0");
 
-	sc_trace_file *tf = sc_create_vcd_trace_file("pcix_0_trace");
-	sc_write_comment(tf, "PCIX Simulation Trace");
-
-	sc_trace(tf, pcix_0.pcix_sig, "pcix_sig");
+	pcix_m_0->p_slave(*pcix_b_0);
+	pcix_s_0->p_master(*pcix_b_0);
 
 	sc_start();
-
-	sc_close_vcd_trace_file(tf);
 
 	system("pause");
 
