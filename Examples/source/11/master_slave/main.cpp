@@ -5,15 +5,11 @@
 /**
  * Includes
  */
-#include "master.h"
-#include "slave.h"
+#include "top.h"
 
 int sc_main(int argc, char** argv) {
 
-	master master_i("master");
-	slave slave_i("slave",4);
-
-	master_i.initiator_port( slave_i.target_port );
+	top top_i("top",1);
 
 	sc_start();
 

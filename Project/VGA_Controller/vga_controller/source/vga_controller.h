@@ -2,7 +2,11 @@
 #define VGA_CONTROLLER_H
 
 #include <systemc.h>
+#include "tlm.h"
+#include "tlm_utils/simple_initiator_socket.h"
 #include "vga_controller_include.h"
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
 
 /**
  * VGA Controller Module
@@ -10,19 +14,12 @@
 
 SC_MODULE(vga_controller) {
 
-	/** VGA Controller attributes **/
-	int x_res;
-	int y_res;
-	int _x_img_;
-	int _y_img_;
-	sc_event vga_clk_trig;
-
 	/** VGA Controller ports **/
-	sc_in<bool> sys_clock;
-	sc_in<sc_lv<32>> vga_datain;
-	sc_out<sc_lv<10>> vga_r, vga_g, vga_b;
-	sc_out<sc_logic> vga_clk;
-	sc_out<sc_logic> vga_hs, vga_vs;
+	sc_out< sc_bv<10> > vga_r, vga_g, vga_b; // VGA dataout ports, separated into individual chromas
+	sc_out<bool> vga_hs, vga_vs;           // VGA horizontal and vertical synchronization pulses
+
+	// TLM-2 socket, defaults to 32-bits wide, base protocol
+    tlm_utils::simple_initiator_socket<vga_controller> vga_socket;
 
 	SC_HAS_PROCESS(vga_controller);
 
@@ -51,33 +48,64 @@ SC_MODULE(vga_controller) {
 	vga_controller(sc_module_name _name, int _x_res, int _y_res) : sc_module(_name), x_res(_x_res), y_res(_y_res) {
 
 		if((_x_res > _X_MAX_) || (_y_res > _Y_MAX_))
-			SC_REPORT_ERROR("","Image resolution not supported");
+			SC_REPORT_ERROR("VGA Controller","Image resolution not supported");
 
 		init();
 
 	}
+
+	~vga_controller() { delete curr_frame; }
 
 	/** VGA Controller methods **/
 
 	int get_x_res() { return x_res; }
 	int get_y_res() { return y_res; }
 
+	private:
+
+	/** VGA Controller attributes **/
+	bool fetch_done;       // Fetch bit
+	int x_res;             // Image horizontal resolution
+	int y_res;             // Image vertical resolution
+	int _x_img_;           // Total image horizontal resolution
+	int _y_img_;           // Total image vertical resolution
+	unsigned int f_i;      // Frame index
+	cv::Mat* curr_frame;   // Current frame
+	sc_event vga_fetch_trig, vga_done_trig; // VGA fetch and fetch done trigger event
+
 	void init() {
 
+		// Calculate total image resolution that needs to be drawn
 		_x_img_ = _X_SYNC_ + _X_FPOR_ + x_res + _X_BPOR_;
 		_y_img_ = _Y_SYNC_ + _Y_FPOR_ + y_res + _Y_BPOR_;
 
-		cout << "VGA_CONTROLLER: " << "Image size is " << x_res << "x" << y_res << endl;
+		//cout << "VGA_CONTROLLER: " << "Frame size is " << x_res << "x" << y_res << endl;
 
-		SC_THREAD(vga_clk_thread);
-			sensitive << sys_clock;
+		curr_frame = new cv::Mat();
+
+		f_i = 0;
+		fetch_done = false;
+
+		SC_THREAD(vga_prefetch);
+			sensitive << vga_fetch_trig;
 		SC_THREAD(vga_cont_thread);
-			sensitive << vga_clk_trig;
+			sensitive << vga_done_trig;
 
 	}
 
-	void vga_clk_thread();
+	void vga_prefetch();
 	void vga_cont_thread();
+	template<int T>
+	sc_bv<T> ch2sc_bv(const unsigned char ch) {
+
+		sc_bv<T> scbv;
+
+		for(int i=0; i < scbv.length(); i++) // Lower index = lower power
+			scbv[i] = (ch >> i) & 1;
+
+		return scbv;
+
+	}
 
 };
 

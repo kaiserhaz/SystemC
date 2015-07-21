@@ -5,7 +5,6 @@
 
 //Constants
 
-#define _V_MAX_ 1.0       // Maximum voltage level
 #define _X_SCREEN_ 800    // Maximum horizontal screen size in pixels
 #define _Y_SCREEN_ 524    // Maximum vertical screen size in lines
 
@@ -20,9 +19,5 @@
 #define _Y_BPOR_ 31       // Vertical back porch duration in lines
 #define _Y_SYNC_ 2        // Vertical synchronization duration in lines
 #define _Y_FPOR_ 11       // Vertical front porch duration in lines
-
-#define _F_ 60.0          // Refresh frequency
-#define _F_SYS_ 66000000  // System clock speed (PCI 2.1)
-#define _F_VGA_ 25175000  // VGA pixel clock
 
 #endif

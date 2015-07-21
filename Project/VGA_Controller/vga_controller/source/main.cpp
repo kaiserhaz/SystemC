@@ -2,65 +2,59 @@
  * Main
  */
 
-#include <time.h>
-#include <systemc.h>
 #include "vga_controller.h"
+#include "sys_memory.h"
+#include "dac.h"
 
 int sc_main(int argc, char *argv[]) {
 
-	srand(time(NULL));
+	vga_controller* vga_cont; // VGA Controller instance
+	Memory* sys_mem;          // System memory instance
+	dac* video_dac;           // Video DAC
 
-	vga_controller vga_cont0("vga_cont0", 80, 60);
+	sc_signal< sc_bv<10> > _t_d_r, _t_d_g, _t_d_b;      // Digital output from VGA controller to DAC
+	sca_tdf::sca_signal<double> _t_a_r, _t_a_g, _t_a_b; // Analog output from DAC
+	sc_signal<bool> _t_vga_hs, _t_vga_vs;             // Digital output signals for synchronisation
+	
+	sca_trace_file *tf;
 
-	sc_signal< sc_lv<10> > _t_r, _t_g, _t_b;
-	sc_signal< sc_lv<32> > _t_datain;
-	sc_signal<sc_logic> _t_vga_clk, _t_vga_hs, _t_vga_vs;
-
-	sc_clock sys_clk("sys_clk0", 15, SC_NS);
-
-	sc_lv<32> __t_datain;
+	sys_mem = new Memory("sys_mem0");
+	vga_cont = new vga_controller("vga_cont0", 160, 120); // Specific to test-mpeg.mpg!
+	video_dac = new dac("dac0");
 
 	/** Port connections **/
+	vga_cont->vga_socket.bind(sys_mem->socket); // TLM2 socket bind
 
-	vga_cont0.vga_datain(_t_datain);
-	vga_cont0.sys_clock(sys_clk);
-	vga_cont0.vga_r(_t_r);
-	vga_cont0.vga_g(_t_g);
-	vga_cont0.vga_b(_t_b);
-	vga_cont0.vga_clk(_t_vga_clk);
-	vga_cont0.vga_hs(_t_vga_hs);
-	vga_cont0.vga_vs(_t_vga_vs);
+	// VGA controller binds
+	vga_cont->vga_r(_t_d_r);
+	vga_cont->vga_g(_t_d_g);
+	vga_cont->vga_b(_t_d_b);
+	vga_cont->vga_hs(_t_vga_hs);
+	vga_cont->vga_vs(_t_vga_vs);
 
-	sc_trace_file *tf = sc_create_vcd_trace_file("wave_vga");
-	sc_write_comment(tf, "VGA Controller simulation");
-	tf->set_time_unit(1, SC_NS);
+	// DAC binds
+	video_dac->vga_r(_t_d_r);
+	video_dac->vga_g(_t_d_g);
+	video_dac->vga_b(_t_d_b);
+	video_dac->dac_r(_t_a_r);
+	video_dac->dac_g(_t_a_g);
+	video_dac->dac_b(_t_a_b);
 
-	//sc_trace(tf,sys_clk, "sys_clk");
-	sc_trace(tf,_t_datain,"datain");
-	sc_trace(tf,_t_r,"r");
-	sc_trace(tf,_t_g,"g");
-	sc_trace(tf,_t_b,"b");
-	sc_trace(tf,_t_vga_clk,"vga_clk");
-	sc_trace(tf,_t_vga_hs,"hsync");
-	sc_trace(tf,_t_vga_vs,"vsync");
+	tf = sca_create_vcd_trace_file("wave_vga");
+	sca_write_comment(tf, "VGA Controller simulation");
 
-	int _i_max_ = (int)(_F_ * (_X_SYNC_ + _X_FPOR_ + vga_cont0.get_x_res() + _X_BPOR_) *
-		                (_Y_SYNC_ + _Y_FPOR_ + vga_cont0.get_y_res() + _Y_BPOR_));
+	sca_trace(tf,_t_d_r,"d_r");
+	sca_trace(tf,_t_d_g,"d_g");
+	sca_trace(tf,_t_d_b,"d_b");
+	sca_trace(tf,_t_a_r,"a_r");
+	sca_trace(tf,_t_a_g,"a_g");
+	sca_trace(tf,_t_a_b,"a_b");
+	sca_trace(tf,_t_vga_hs,"hsync");
+	sca_trace(tf,_t_vga_vs,"vsync");
 
-	for(int i=0; i<60; i++) {
+	sc_start(/*20, SC_SEC*/);
 
-		for(int j=0; j<30; j++)
-			__t_datain[j] = rand() % 2;
-
-		_t_datain = __t_datain;
-
-		cout << "TESTBENCH: Tracing image #" << i << endl;
-
-		sc_start(17, SC_MS);
-
-	}
-
-	sc_close_vcd_trace_file(tf);
+	sca_close_vcd_trace_file(tf);
 
 	system("pause");
 

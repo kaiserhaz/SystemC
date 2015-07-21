@@ -8,27 +8,35 @@
 #ifndef BASIC_IF
 #define BASIC_IF
 
+#define SC_INCLUDE_DYNAMIC_PROCESSES
+
 /**
  * Includes
  */
-#include <systemc.h>
-#include <tlm.h>
+#include <systemc>
+#include <tlm>
 
+using namespace std;
 using namespace tlm;
+using namespace sc_core;
 
 typedef unsigned int ADDRESS_TYPE;
 typedef unsigned int DATA_TYPE;
+#define N_SLAVE 5
 
+/** Basic request types to indicate the nature of the request **/
 enum basic_request_type
 {
   READ , WRITE
 };
 
+/** Basic status to indicate the status of the communication **/
 enum basic_status
 {
   ERROR , SUCCESS
 };
 
+/** Basic request object description **/
 template< typename ADDRESS_TYPE , typename DATA_TYPE >
 class basic_request
 {
@@ -42,6 +50,7 @@ public:
 
 };
 
+/** Basic response object description **/
 template< typename DATA_TYPE >
 class basic_response
 {
@@ -69,6 +78,7 @@ class basic_if
 
 };
 
+/** Helper functions, or rather, operator definitions **/
 template< typename ADDRESS_TYPE , typename DATA_TYPE >
 ostream &operator<<( ostream &fsout ,
                      const basic_request<ADDRESS_TYPE,DATA_TYPE> &req ) {
