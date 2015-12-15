@@ -8,8 +8,6 @@
 
 void vga_controller::vga_prefetch() {
 
-	/** Edited copy from tlm_example1 **/
-	// TLM-2 generic payload transaction, reused across calls to b_transport
     tlm::tlm_generic_payload* trans = new tlm::tlm_generic_payload;
 	tlm::tlm_command cmd = tlm::TLM_READ_COMMAND;
     sc_time delay = sc_time(5, SC_US); // Let's say akin to DDR2-400B
@@ -17,19 +15,19 @@ void vga_controller::vga_prefetch() {
     while(1)
     {
 
-      // Initialize 8 out of the 10 attributes, byte_enable_length and extensions being unused
       trans->set_command( cmd );
       trans->set_address( vga_controller::f_i++ );
 	  trans->set_data_ptr( reinterpret_cast<unsigned char*>(vga_controller::curr_frame) );
       trans->set_data_length( 32 ); // Placeholder value, not really used in this example
-      trans->set_streaming_width( 32 ); // = data_length to indicate no streaming
-      trans->set_byte_enable_ptr( 0 ); // 0 indicates unused
-      trans->set_dmi_allowed( false ); // Mandatory initial value
-      trans->set_response_status( tlm::TLM_INCOMPLETE_RESPONSE ); // Mandatory initial value
+      trans->set_streaming_width( 32 );
+      trans->set_byte_enable_ptr( 0 );
+      trans->set_dmi_allowed( false );
+      trans->set_response_status( tlm::TLM_INCOMPLETE_RESPONSE );
 
-      vga_controller::vga_socket->b_transport( *trans, delay );  // Blocking transport call
+	  // Call blocking transport
+      vga_controller::vga_socket->b_transport( *trans, delay );
 
-      // Initiator obliged to check response status and delay
+	  // Check status of transaction
       if ( trans->is_response_error() )
         SC_REPORT_ERROR("TLM-2", "Response error from b_transport");
 
@@ -50,6 +48,7 @@ void vga_controller::vga_cont_thread() {
 	cv::Vec3b _vga_datain;
 	sc_bv<10> _vga_r, _vga_g, _vga_b;
 	sc_time delay = sc_time(60, SC_NS);
+
 	int _vga_hsync=0, _vga_vsync=0;
 	int _ix = 0, _iy = 0;
 	bool draw_img = false;
@@ -57,19 +56,19 @@ void vga_controller::vga_cont_thread() {
 	vga_controller::vga_hs->write(true);
 	vga_controller::vga_vs->write(true);
 
-	while(vga_controller::f_i < 10/*629*/) { // Hardcoded limit, only for that test-mpeg.mpg video!
+	while(vga_controller::f_i < 629) { // Hardcoded limit, only for that test-mpeg.mpg video!
 
 		if(!vga_controller::fetch_done) {
 
-			wait(vga_controller::vga_done_trig);
+			wait(vga_controller::vga_done_trig); // Probably akin to something like a suspend mode during idle time
 			
 			//cout << "VGA CONTROLLER: Fetch done" << endl;
 
 			cout << "VGA CONTROLLER: Displaying frame #" << f_i << endl;
 
-			//cv::imshow("Current frame", *curr_frame);
+			cv::imshow("Current frame", *curr_frame);
 
-			//cv::waitKey(1);
+			cv::waitKey(1);
 
 		}
 

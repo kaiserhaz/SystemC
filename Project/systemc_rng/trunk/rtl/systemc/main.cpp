@@ -94,7 +94,18 @@ sc_main (int argc, char *argv[])
   st1->seed_o (seed_i);
   st1->number_i (number_o);
 
-  sc_start ();
+  sc_trace_file *tf = sc_create_vcd_trace_file("rng_wave");
+  sc_write_comment(tf, "Random Number Generator wave trace");
+  tf->set_time_unit(1, SC_US);
+
+  sc_trace(tf, reset, "Reset");
+  sc_trace(tf, loadseed_i, "InitialSeed");
+  sc_trace(tf, seed_i, "Seed");
+  sc_trace(tf, number_o, "RandomNumber");
+
+  sc_start (1, SC_SEC);
+
+  sc_close_vcd_trace_file(tf);
 
   return 0;
 

@@ -15,8 +15,11 @@
 
 struct Memory: sc_module
 {
-  // TLM-2 socket, defaults to 32-bits wide, base protocol
+  
+  /** Memor port **/
   tlm_utils::simple_target_socket<Memory> socket;
+
+  /** Memory constructor & destructor **/
 
   SC_CTOR(Memory)
   : socket("socket")
@@ -30,6 +33,7 @@ struct Memory: sc_module
 	if (!cap.isOpened())
 	    SC_REPORT_ERROR("OpenCV", "Video import error");
 
+	// Pre-load a frame
 	if(!cap.read(curr_frame))
 		SC_REPORT_ERROR("OpenCV", "Video read error");
 
@@ -55,12 +59,10 @@ struct Memory: sc_module
     unsigned char*   byt = trans.get_byte_enable_ptr();
     unsigned int     wid = trans.get_streaming_width();
 
-    // Obliged to check address range and check for unsupported features,
-    //   i.e. byte enables, streaming, and bursts
-    // Can ignore DMI hint and extensions
-    // Using the SystemC report handler is an acceptable way of signalling an error
     if (byt != 0 || len > 32 || wid < len)
       SC_REPORT_ERROR("TLM-2", "Target does not support given generic payload transaction");
+
+	// Check for address mismatch
 	if(adr != (cap.get(CV_CAP_PROP_POS_FRAMES)-1)) {
 
 	  /*cout << "MEMORY: Requested read addr is :" << adr-1 << " and current frame points to "
@@ -70,7 +72,6 @@ struct Memory: sc_module
 
 	}
 
-    // Obliged to implement read command
 	//cout << "MEMORY: Frame #" << adr+1 << " requested" << endl; // Debug purpose
 
 	if(!cap.read(curr_frame))
@@ -78,15 +79,16 @@ struct Memory: sc_module
 
 	memcpy(ptr, &curr_frame, sizeof(curr_frame));
 
-    // Obliged to set response status to indicate successful completion
     trans.set_response_status( tlm::TLM_OK_RESPONSE );
 
 	wait(delay);
+
   }
 
   private:
 
-  /** System Memory attributes **/
+  /** Memory attributes **/
+
   cv::VideoCapture cap;
   cv::Mat curr_frame;
 

@@ -46,6 +46,7 @@ local.properties
 *.vcxproj.filters
 *.vcxproj.user
 *.cd
+*.vcproj
 
 # Build results
 
@@ -224,11 +225,15 @@ pip-log.txt
 ## Documents
 ############
 *.pdf
+*.ppt
+*.doc
+*.docx
 
 ############
 ## Others
 ############
 *.vcd
 *.wlf
+*.asf
 work/
 Documents/

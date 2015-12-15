@@ -16,14 +16,12 @@ SC_MODULE(vga_controller) {
 
 	/** VGA Controller ports **/
 	sc_out< sc_bv<10> > vga_r, vga_g, vga_b; // VGA dataout ports, separated into individual chromas
-	sc_out<bool> vga_hs, vga_vs;           // VGA horizontal and vertical synchronization pulses
-
-	// TLM-2 socket, defaults to 32-bits wide, base protocol
-    tlm_utils::simple_initiator_socket<vga_controller> vga_socket;
+	sc_out<bool> vga_hs, vga_vs;             // VGA horizontal and vertical synchronization pulses
+    tlm_utils::simple_initiator_socket<vga_controller> vga_socket; // TLM2 socket to connect to memory
 
 	SC_HAS_PROCESS(vga_controller);
 
-	/** VGA Controller constructors **/
+	/** VGA Controller constructors & destructor **/
 
 	vga_controller() : sc_module("vga_cont_def0"), x_res(_X_MAX_), y_res(_Y_MAX_) {
 
@@ -64,6 +62,7 @@ SC_MODULE(vga_controller) {
 	private:
 
 	/** VGA Controller attributes **/
+
 	bool fetch_done;       // Fetch bit
 	int x_res;             // Image horizontal resolution
 	int y_res;             // Image vertical resolution
