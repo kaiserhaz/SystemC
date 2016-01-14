@@ -10,10 +10,9 @@
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 
 /** Includes **/
-#include <systemc.h>
+#include "..\vnc_inc.h"
 #include <tlm.h>
 #include <tlm_utils/simple_target_socket.h>
-#include "../vnc_dt.h"
 
 /**
  * Simple generic memory instance
@@ -32,56 +31,58 @@ struct gen_mem: sc_module {
 
     // Register callback for incoming b_transport interface method call
     mem_socket.register_b_transport(this, &gen_mem::b_transport);
+	dont_initialize(); // Mark to not initialize thread
 
     // Initialize memory with random data
-    for (int i = 0; i < MEM_SIZE; i++)
-		mem[i] = 0;
+    mem_reset();
   
   }
 
   // TLM-2 blocking transport method
   virtual void b_transport(tlm::tlm_generic_payload& trans, sc_time& delay) {
 
-    tlm::tlm_command cmd = trans.get_command();
-    sc_dt::uint64    adr = trans.get_address();
-    unsigned char*   ptr = trans.get_data_ptr();
-    unsigned int     len = trans.get_data_length();
-    unsigned char*   byt = trans.get_byte_enable_ptr();
-    unsigned int     wid = trans.get_streaming_width();
+    tlm::tlm_command cmd = trans.get_command();         // Get command
+    sc_dt::uint64    adr = trans.get_address();         // Get address
+    unsigned char*   ptr = trans.get_data_ptr();        // Get data pointer
+    unsigned int     len = trans.get_data_length();     // Get data length
+    unsigned char*   byt = trans.get_byte_enable_ptr(); // Get byte enable pointer
+    unsigned int     wid = trans.get_streaming_width(); // Get streaming width
 
     // Obliged to check address range and check for unsupported features
     if (adr >= sc_dt::uint64(MEM_SIZE) || byt != 0 || len > 16 || wid < len)
       SC_REPORT_ERROR("TLM-2", "Target does not support given generic payload transaction");
 
     // Obliged to implement read and write commands
-    if (cmd == tlm::TLM_READ_COMMAND) { // Read command
+    if (cmd == tlm::TLM_READ_COMMAND) {                 // Read command
 	  
-	  memcpy(ptr, &mem[adr], len);
+	  memcpy(ptr, &mem[adr], len);                      // Use memcopy function to copy memory address pointer
 
-	  cout << "MEMORY: Reading value @" << adr << endl;
-
-	}
-
-    else if (cmd == tlm::TLM_WRITE_COMMAND) { // Write command
-
-      memcpy(&mem[adr], ptr, len);
-
-	  cout << "MEMORY: Writing value @" << adr << endl;
+	  cout << sc_time_stamp() << " MEMORY: Reading value " << *(mem+adr) << " @" << adr << endl;
 
 	}
 
-	else { // Reset command
+    else if (cmd == tlm::TLM_WRITE_COMMAND) {           // Write command
 
-	  cout << "MEMORY: Reset requested" << endl;
+      memcpy(&mem[adr], ptr, len);                      // Use memcopy function to copy to memory
 
-	  for (int i = 0; i < MEM_SIZE; i++)
-		mem[i] = 0;
+	  cout << sc_time_stamp() << " MEMORY: Writing value " << *ptr << " @" << adr << endl;
+
+	}
+
+	else if (cmd == tlm::TLM_IGNORE_COMMAND) {          // Reset command
+
+	  mem_reset();                                      // Reset memory
+
+	  cout << sc_time_stamp() << " MEMORY: Reset requested" << endl;
 	
 	}
 
+	else
+	  SC_REPORT_ERROR("TLM-2", "Command not supported");
+	
     // Obliged to set response status to indicate successful completion
     trans.set_response_status(tlm::TLM_OK_RESPONSE);
-
+	
 	// Realize wait delay to advance simulation time
 	wait(delay);
 
@@ -89,7 +90,14 @@ struct gen_mem: sc_module {
 
   private:
 
-  unsigned short mem[MEM_SIZE]; // Memory array instance
+  unsigned short mem[MEM_SIZE];                         // Memory array instance
+
+  void mem_reset() {
+
+	  for (int i = 0; i < MEM_SIZE; i++)
+		mem[i] = 0x21;                                  // 33 in decimals
+
+  }
 
 };
 

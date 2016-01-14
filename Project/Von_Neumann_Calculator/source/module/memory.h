@@ -7,7 +7,6 @@
 #define MEMORY_H
 
 /** Includes **/
-#include <systemc.h>
 #include "gen_mem.h"
 #include "../if_mod/rtl_to_tlm2_adaptor.h"
 
@@ -17,32 +16,39 @@ SC_MODULE( memory ) {
 
 	/** Input/Output ports **/
 
-	sc_in<bool> CLK;
-	sc_in<sc_logic> RST_N;
-	sc_out< a_word_t > ADDR;
-	sc_out< d_word_t > DATA;
-	sc_in<sc_logic> R_NW;
+	sc_in<bool>                    CLK;                      // Clock input
+	sc_in<sc_logic>                RST_N;                    // Reset input
+	sc_in<sc_logic>                R_NW;                     // Read/write input
+	sc_out<sc_logic>               OR_N;                     // Output ready output
+	sc_out<sc_logic>               EOW_N;                    // End of write output
+	sc_in< a_word_t >              ADDR;                     // Address line input
+	sc_inout_rv<MEM_DATA_WORD_LEN> DATA;                     // Data line bidirectional port
 
 	/** Submodule instances **/
 
-	gen_mem* g_m0;
-	rtl_to_tlm2_adaptor* rtt2a0;
+	gen_mem* g_m0;                                           // Generic memory instance
+	rtl_to_tlm2_adaptor* rtt2a0;                             // RTL to TLM2 adaptor instance
 
 	/** Memory constructor **/
+	
+	SC_HAS_PROCESS( memory );                                // Register 'memory' as a module constructor
 
-	SC_CTOR( memory ) {
+	memory(sc_module_name _name) : sc_module(_name) {
 
-		g_m0 = new gen_mem("g_m0"); // Generic memory instance
-		rtt2a0 = new rtl_to_tlm2_adaptor("rtt2a0"); // Adaptor instance
+		g_m0 = new gen_mem("g_m0");                          // Generic memory instance
+		rtt2a0 = new rtl_to_tlm2_adaptor("rtt2a0");          // Adaptor instance
 
-		rtt2a0->rtt2a_socket.bind(g_m0->mem_socket); // TLM socket bind
+		rtt2a0->rtt2a_socket.bind(g_m0->mem_socket);         // TLM socket bind
 
 		// Port binding
 		rtt2a0->CLK(CLK);
 		rtt2a0->RST_N(RST_N);
+		rtt2a0->R_NW(R_NW);
+		rtt2a0->OR_N(OR_N);
+		rtt2a0->EOW_N(EOW_N);
 		rtt2a0->ADDR(ADDR);
 		rtt2a0->DATA(DATA);
-		rtt2a0->R_NW(R_NW);
+		
 
 	}
 
