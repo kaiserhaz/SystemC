@@ -1,8 +1,3 @@
-/** ############################################################################################################
- *                                          CURRENTLY BEING REWORKED
- ** ############################################################################################################
- */
-
 /**
  * RTL-to-TLM2 Adaptor
  */
@@ -32,13 +27,11 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 
   /** Module input/output ports **/
 
-  sc_in<bool>                    CLK;           // Clock input
-  sc_in<sc_logic>                RST_N;         // Reset, active low
-  sc_in<sc_logic>                R_NW;          // R/W signal; R active low
-  sc_out<sc_logic>               OR_N;          // Output ready, active low
-  sc_out<sc_logic>               EOW_N;         // End of write, active low
-  sc_in< a_word_t >              ADDR;          // Address line
-  sc_inout_rv<MEM_DATA_WORD_LEN> DATA;          // Data line
+  sc_in<bool>                    CLK;         // Clock input
+  sc_in<sc_logic>                RST_N;       // Reset, active low
+  sc_in<sc_logic>                R_NW;        // R/W signal; R active low; pulsed
+  sc_in< a_word_t >              ADDR;        // Address line
+  sc_inout_rv<MEM_DATA_WORD_LEN> DATA;        // Data line
 
   /** Adaptor constructor **/
 
@@ -46,197 +39,105 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 
   rtl_to_tlm2_adaptor(sc_module_name _name) : sc_module(_name),
 	                                          addr(0), data(0),
-	                                          reset(false),
-                                              r_nw(ZX),
 											  cmd(tlm::TLM_IGNORE_COMMAND)
                                               { // Construct and name socket
-  
-    SC_THREAD(rttlm2_channel_thread);           // Register adaptor channel thread
 
-	SC_METHOD(r_nw_method);                     // Register read/write method
-		sensitive << R_NW;                          // Set sensitivity
-		dont_initialize();                          // Inhibit method initialization
+    SC_METHOD(r_nw_monitor);                  // R_NW line monitor
+		sensitive << R_NW;                    // Set sensitivity
+		dont_initialize();                    // Inhibit method initialization
+
+    SC_THREAD(write_thread);                  // Register adaptor channel thread
+
+	SC_THREAD(read_thread);                   // Register read/write method
 	
-	trans = new tlm::tlm_generic_payload;       // Create new payload instance
+	trans = new tlm::tlm_generic_payload;     // Create new payload instance
 
   }
 
   private:
 
-  /** SystemC phase callback **/
-
-  void end_of_elaboration() {
-
-	  OR_N->write(SC_LOGIC_1);
-	  EOW_N->write(SC_LOGIC_1);
-
-  }
-
   /** Variables **/
 
-  unsigned short data;                          // Internal data buffer
-  uint64 addr;                                  // Address word variable, used to interface between uint and sc_lv
+  signed short data;                          // Internal data buffer
+  uint64 addr;                                // Address word variable, used to interface between uint and sc_lv
 
-  bool reset;                                   // Reset parameter
+  sc_buffer<sc_logic> _r_nw;                  // Read/write buffer
   
-  sc_event rwe;                                 // Read/write enable event
-
-  enum cmd_t {R, W, ZX} r_nw;                   // Read/write parameter
-
-  tlm::tlm_generic_payload* trans;              // Generic payload instance
-  tlm::tlm_command cmd;                         // TLM-2 generic payload transaction, reused across calls to b_transport
+  tlm::tlm_generic_payload* trans;            // Generic payload instance
+  tlm::tlm_command cmd;                       // TLM-2 generic payload transaction, reused across calls to b_transport
 
   /** Write thread **/
 
-  void rttlm2_channel_thread() {
+  void write_thread() {
 
 	  while(true) {
 
-		if(RST_N->read() == SC_LOGIC_0) {       // Reset case
+		wait(CLK->posedge_event() | RST_N->negedge_event()); // On either events
 
-			if(!reset) {
+		if(RST_N->read() == SC_LOGIC_0) {     // Reset case
 
-				cmd = tlm::TLM_IGNORE_COMMAND;  // Hacked use of this command. Normally we need to setup our own
+			cout << sc_time_stamp() << " ADAPTOR: Reseting" << endl;
 
-				addr = 0;                       // Set 'null' addr
-
-				data = 0;                       // Write 0 to all cases
-
-				cout << sc_time_stamp() << " ADAPTOR: Reseting" << endl;
-
-				payload_setup(trans, cmd, data, addr);                    // Payload setup
-
-				rtt2a_socket->b_transport(*trans, sc_time(SC_ZERO_TIME)); // Blocking transport call
-
-				// Initiator obliged to check response status and delay
-				if (trans->is_response_error())
-					SC_REPORT_ERROR("TLM-2", "Response error from b_transport");
-
-				reset = true;                   // Update reset variable
-
-				wait(MEM_PROCESS_TIME, MEM_TIME_UNIT);                    // Wait for the specified time
-
-			}
+			mem_reset();                      // Call reset
 
 		}
 
-		else {
-
-			switch(r_nw) {
-
-				case W: {
-
-					wait(CLK.posedge_event());  // Synchronous wait
-					
-					cout << sc_time_stamp() << " ADAPTOR: Command received: " << 'W' << endl;
-
-					cmd = tlm::TLM_WRITE_COMMAND;                             // Set command
-
-					payload_setup(trans, cmd, data, addr);                    // Payload setup
+		else if(_r_nw.read() == SC_LOGIC_1) {
 		
-					rtt2a_socket->b_transport(*trans, sc_time(SC_ZERO_TIME)); // Blocking transport call
+			cout << sc_time_stamp() << " ADAPTOR: Command received: " << 'W' << endl;
 
-					// Initiator obliged to check response status and delay
-					if (trans->is_response_error())
-						SC_REPORT_ERROR("TLM-2", "Response error from b_transport");
-
-					//cout << sc_time_stamp() << " ADAPTOR: Data written: " << d_word_t(data) << " " << data << endl;
-
-					wait(MEM_PROCESS_TIME, MEM_TIME_UNIT);                    // Wait for the specified time
-
-					eow_notify();                                             // Notify the end of write
-
-					r_nw = ZX;                                                // Invalidate read/write variable
-
-					break;
-
-				}
-
-				case R: {
-
-					cout << sc_time_stamp() << " ADAPTOR: Command received: " << 'R' << endl;
-
-					cmd = tlm::TLM_READ_COMMAND;                              // Set command
-
-					payload_setup(trans, cmd, data, addr);                    // Payload setup
-		
-					rtt2a_socket->b_transport(*trans, sc_time(SC_ZERO_TIME)); // Blocking transport call
-
-					// Initiator obliged to check response status and delay
-					if (trans->is_response_error())
-						SC_REPORT_ERROR("TLM-2", "Response error from b_transport");
-
-					wait(MEM_PROCESS_TIME, MEM_TIME_UNIT);                    // Wait for the specified time
-
-					write(data);                                              // Write data back to port
-					
-					//cout << sc_time_stamp() << " ADAPTOR: Data read: " << d_word_t(data) << " " << data << endl;
-
-					r_nw = ZX;                                                // Invalidate read/write variable
-
-					break;
-
-				}
-
-				default: {
-				    
-					cout << sc_time_stamp() << " ADAPTOR: Wait for read/write event " << endl;
-
-					wait(rwe);                  // Wait for the read/write enabled variable
-					
-					cout << sc_time_stamp() << " ADAPTOR: Read/write event triggered " << endl;
-
-					addr = ADDR->read().to_uint64();    // Set addr
-
-					data = DATA->read().to_uint();      // Set data <- Triggering 4-value warning
-
-					cout << sc_time_stamp() << " ADAPTOR: Data received: " << DATA->read().to_string() << " " << data << endl;
-
-				}
-			}
-			
-			reset = false;                      // Deassert reset variable
-
-			data = 0;                           // Flush data variable
+			mem_write();                      // Call write
 
 		}
 
+	    
 	  }
 
   }
 
-  /** Read/write method **/
+  /** Read thread **/
 
-  void r_nw_method() {
-	
-	sc_logic tmp;                               // Temporary var
+  void read_thread() {
 
-	tmp = R_NW->read();                         // Read read/write value from port
-	
-	if(tmp == SC_LOGIC_1) {                     // In case of high value, it is a write command
-		r_nw = W;
-        rwe.notify(SC_ZERO_TIME);               // Set read/write enable variable
+    while(true) {
+
+        wait(_r_nw.negedge_event());          // Wait for buffer trigger
+		
+		if(RST_N->read() == SC_LOGIC_0) {
+
+			cout << sc_time_stamp() << " ADAPTOR: Resetting " << endl;
+
+		}
+
+        else if(_r_nw.read() == SC_LOGIC_0) {
+
+			cout << sc_time_stamp() << " ADAPTOR: Command received: " << 'R' << endl;
+
+			mem_read();                       // Call write
+
+        }
+
     }
-	else if(tmp == SC_LOGIC_0) {                // Else, it is a read command
-		r_nw = R;
-        rwe.notify(SC_ZERO_TIME);               // Set read/write enable variable
-    }
-	else                                        // If the read/write line is not 1 or 0, then mark it as
-		r_nw = ZX;                              //  don't care
 
-	cout << sc_time_stamp() << " ADAPTOR: Read/write method triggered " << endl;
+  }
 
-	next_trigger(R_NW->default_event());        // Set next trigger
+  /** Read/write monitor **/
+
+  void r_nw_monitor() {
+	
+	_r_nw.write(R_NW->read());                // Read read/write value from port
+
+	//cout << sc_time_stamp() << " ADAPTOR: Read/write method triggered " << endl;
 
   }
 
   /** Methods **/
 
-  // Sets up payload
+  // Sets up TLM2 payload
   void payload_setup(tlm::tlm_generic_payload* trans,
 	                 tlm::tlm_command cmd,
-					 unsigned short& data,
-					 unsigned int addr)
+					 signed short& data,
+					 uint64 addr)
   {
 
 	  // Initialize 8 out of the 10 TLM-2 attributes, byte_enable_length and extensions being unused
@@ -251,43 +152,90 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 
   }
 
-  // Write function that drives the data line properly, in order to avoid unresolved cases
-  void write(unsigned short data) {
+  // Local b_transport used to execute the standard TLM2 procedures
+  void local_b_transport() {
 
-	  DATA->write(d_word_t(0));                  // Set line at 0
+	  payload_setup(trans, cmd, data, addr);  // Payload setup
 
-	  wait(MEM_SETUP_WRITE_TIME, MEM_TIME_UNIT); // Setup wait before writing
+	  rtt2a_socket->b_transport(*trans, sc_time(SC_ZERO_TIME)); // Blocking transport call
 
-	  DATA->write(d_word_t(data));               // Write data on line
+	  // Initiator obliged to check response status and delay
+	  if (trans->is_response_error())
+	    SC_REPORT_ERROR("TLM-2", "Response error from b_transport");
 
-	  OR_N->write(SC_LOGIC_0);                   // Write output ready low (active state)
+  }
 
-	  wait(MEM_HOLD_WRITE_TIME, MEM_TIME_UNIT);  // Hold wait
-	  
-	  DATA->write(d_word_t(0));                  // Set line at 0
+  // Memory write procedure
+  void mem_write() {
 
-	  OR_N->write(SC_LOGIC_1);                   // Write output ready high (inactive state)
+	  // Phase 0
 
-	  wait(MEM_SETUP_WRITE_TIME, MEM_TIME_UNIT); // Post-hold wait
+      wait(1, SC_NS);
 
-	  DATA->write(d_word_t('z'));                // Return line to high impedance
+      // Phase 1
+
+      wait(SC_ZERO_TIME);
+
+      cmd = tlm::TLM_WRITE_COMMAND;           // Set command 
+
+      addr = ADDR->read().to_uint64();        // Read address line
+ 
+      data = DATA->read().to_uint64();        // Read data line
+
+      local_b_transport();                    // Call local b_transport
+
+	  wait(4, SC_NS);                         // Setup wait before writing
 
   }
   
-  // Notify function that drives the EOW line
-  void eow_notify() {
+  // Memory read procedure
+  void mem_read() {
 
-	  wait(MEM_SETUP_WRITE_TIME, MEM_TIME_UNIT); // Wait before signal writing
+      // Phase 0
 
-	  EOW_N->write(SC_LOGIC_0);                  // Signal the end of write
+      wait(1, SC_NS);
 
-	  wait(MEM_HOLD_WRITE_TIME, MEM_TIME_UNIT);  // Signal hold wait
+      // Phase 1
 
-      EOW_N->write(SC_LOGIC_1);                  // Deassert the signal
+      wait(SC_ZERO_TIME);
 
-	  wait(MEM_SETUP_WRITE_TIME, MEM_TIME_UNIT); // Wait after deasserting
+      cmd = tlm::TLM_READ_COMMAND;            // Set command 
+
+      addr = ADDR->read().to_uint64();        // Read address line
+      
+      local_b_transport();                    // Call local b_transport
+
+	  wait(1, SC_NS);
+
+      // Phase 2
+
+	  DATA->write(data);                      // Write data to line
+
+	  wait(1, SC_NS);
+
+      // Phase 3
+
+      DATA->write(d_word_t('Z'));             // Reset line to high impedance
+
+      wait(1, SC_NS);
 
   }
+
+  // Memory reset procedure
+  void mem_reset() {
+
+	  cmd = tlm::TLM_IGNORE_COMMAND;          // Set command 
+
+      addr = 0;                               // Read address line
+ 
+      data = 0;                               // Read data line
+
+      local_b_transport();                    // Call local b_transport
+
+	  wait(4, SC_NS);
+
+  }
+
 };
 
 #endif
