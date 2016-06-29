@@ -18,8 +18,8 @@ template<> class scv_extensions<mem_trans>: public scv_extensions_base<mem_trans
 
 	/** Extension fields **/
 
-	scv_extensions<sc_logic> rst_n;           // Verification extension for reset signal
-	scv_extensions<sc_logic> r_nw;            // Verification extension for read/write signal
+	scv_extensions<bool> rst_n;               // Verification extension for reset signal
+	scv_extensions<bool> r_nw;                // Verification extension for read/write signal
 	scv_extensions< a_word_t > addr;          // Verification extension for address line
 	scv_extensions< d_word_t > data;          // Verification extension for data line
 
@@ -45,9 +45,9 @@ class mem_constraint: public scv_constraint_base {
 
 	/** SystemC verification constraint constructor **/
 
-	SCV_CONSTRAINT_CTOR( mem_constraint ) {   // Line 1125 of scv_constraint is throwing sc_logic to bool conversion warning
+	SCV_CONSTRAINT_CTOR( mem_constraint ) {
 
-		SCV_CONSTRAINT( m_t0->addr() < MEM_SIZE ); // Constraint on address
+//		SCV_CONSTRAINT( m_t0->addr() < MEM_SIZE ); // Constraint on address
 		SCV_CONSTRAINT( m_t0->data() < 0x7E ); // Constraint on data, upper bound
 		SCV_CONSTRAINT( m_t0->data() > 0x21 ); // Constraint on data, lower bound
 
@@ -59,13 +59,13 @@ class mem_constraint: public scv_constraint_base {
 SC_MODULE( mem_constr_module ) {
 
 	/** Ports **/
-	sc_in<bool>                    CLK;       // Clock
-	sc_out<sc_logic>               RST_N;     // Reset, active low
-	sc_out<sc_logic>               R_NW;      // R/W signal; R active low
-	sc_out< a_word_t >             ADDR;      // Address line
-	sc_inout_rv<MEM_DATA_WORD_LEN> DATA;      // Data line
+	sc_in<bool>                    CLK;       // Clock input
+	sc_out<bool>                   RST_N;     // Reset input
+	sc_out<bool>                   R_NW;      // Read/write input
+	sc_out< a_word_t >             ADDR;      // Address line input
+	sc_in< d_word_t >              DATAIN;    // Data in line
+	sc_out< d_word_t >             DATAOUT;   // Data out line
 	
-
 	/** Constraint class instance **/
 
 	mem_constraint* mem_c0;
@@ -90,7 +90,7 @@ SC_MODULE( mem_constr_module ) {
 	/** Functions **/
 
 	// Disable randomization of reset
-	void disable_rst_randomization(bool dis, sc_logic state) {
+	void disable_rst_randomization(bool dis, bool state) {
 
 		if(dis)
 			mem_c0->m_t0->rst_n.disable_randomization(); // Disable random resets
@@ -141,8 +141,6 @@ SC_MODULE( mem_constr_module ) {
 			}
 
 		}
-
-		//sc_stop();                          // Stop simulation after end of loop
 		
 	}
 
@@ -151,74 +149,28 @@ SC_MODULE( mem_constr_module ) {
 	unsigned int _n_test;                     // Number of test run
 	signed short _data;                       // Data variable
 
-	/** SystemC phase callbacks **/
-
-	void start_of_simulation() {
-
-		ADDR->write(a_word_t('0'));           // Initialize address line
-		DATA->write(d_word_t('z'));           // Initialize data line
-		R_NW->write(SC_LOGIC_Z);              // Initialize read/write
-
-	}
-
     // Execute a write command according to a specific protocol
 	void mem_constr_write() {
 
-		// Phase 0
-
-		wait(1, SC_NS);
-
-		// Phase 1
-
 		ADDR->write(mem_c0->m_t0->addr.read()); // Write address
-		DATA->write(mem_c0->m_t0->data.read()); // Write data
+		DATAOUT->write(mem_c0->m_t0->data.read()); // Write data
 		R_NW->write(mem_c0->m_t0->r_nw.read()); // Write read/write
 
-		wait(3, SC_NS);
-
-		// Phase 2
-
-		DATA->write(d_word_t('Z'));           // Write data
-		R_NW->write(SC_LOGIC_Z);              // Write read/write
-
-		wait(1, SC_NS);
+		wait(SC_ZERO_TIME);
 
 	}
 
 	// Read according to a specific protocol
 	void mem_constr_read() {
 
-		// Phase 0
-
-		wait(1, SC_NS);
-
-		// Phase 1
-
 		ADDR->write(mem_c0->m_t0->addr.read()); // Write address
-		DATA->write(mem_c0->m_t0->data.read()); // Write data
 		R_NW->write(mem_c0->m_t0->r_nw.read()); // Write read/write
-
-		wait(1, SC_NS);
-
-		// Phase 2
-
-		DATA->write(d_word_t('Z'));           // Write data
-
-		wait(1, SC_NS);
-
-		// Phase 3
 
 		wait(SC_ZERO_TIME);
 
-		_data = DATA->read().to_int();        // Read data
+		_data = DATAIN->read().to_int();        // Read data
 
-		wait(1, SC_NS);
-		
-		// Phase 4
-
-		R_NW->write(SC_LOGIC_Z);              // Reset read/write line to high impedance
-
-		wait(1, SC_NS);
+		wait(SC_ZERO_TIME);
 
 	}
 

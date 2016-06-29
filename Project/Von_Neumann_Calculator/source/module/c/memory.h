@@ -8,7 +8,7 @@
 
 /** Includes **/
 #include "gen_mem.h"
-#include "../if_mod/rtl_to_tlm2_adaptor.h"
+#include "if_mod/rtl_to_tlm2_adaptor.h"
 
 /** Memory module definition **/
 
@@ -17,10 +17,11 @@ SC_MODULE( memory ) {
 	/** Input/Output ports **/
 
 	sc_in<bool>                    CLK;       // Clock input
-	sc_in<sc_logic>                RST_N;     // Reset input
-	sc_in<sc_logic>                R_NW;      // Read/write input
+	sc_in<bool>                    RST_N;     // Reset input
+	sc_in<bool>                    R_NW;      // Read/write input
 	sc_in< a_word_t >              ADDR;      // Address line input
-	sc_inout_rv<MEM_DATA_WORD_LEN> DATA;      // Data line bidirectional port
+	sc_in< d_word_t >              DATAIN;    // Data in line
+	sc_out< d_word_t >             DATAOUT;   // Data out line
 
 	/** Submodule instances **/
 
@@ -43,7 +44,8 @@ SC_MODULE( memory ) {
 		rtt2a0->RST_N(RST_N);
 		rtt2a0->R_NW(R_NW);
 		rtt2a0->ADDR(ADDR);
-		rtt2a0->DATA(DATA);
+		rtt2a0->DATAIN(DATAIN);
+		rtt2a0->DATAOUT(DATAOUT);
 
 	}
 

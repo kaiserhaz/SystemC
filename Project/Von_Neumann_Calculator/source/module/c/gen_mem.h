@@ -57,7 +57,7 @@ struct gen_mem: sc_module {
 	  
 	  memcpy(ptr, &mem[adr], len);                      // Use memcopy function to copy memory address pointer
 
-	  //cout << sc_time_stamp() << " MEMORY: Reading value " << *(mem+adr) << " @" << adr << endl;
+//	  cout << sc_time_stamp() << " MEMORY: Reading value " << *(mem+adr) << " @" << adr << endl;
 
 	}
 
@@ -65,7 +65,7 @@ struct gen_mem: sc_module {
 
       memcpy(&mem[adr], ptr, len);                      // Use memcopy function to copy to memory
 
-	  //cout << sc_time_stamp() << " MEMORY: Writing value " << *ptr << " @" << adr << endl;
+//	  cout << sc_time_stamp() << " MEMORY: Writing value " << *ptr << " @" << adr << endl;
 
 	}
 
@@ -73,7 +73,7 @@ struct gen_mem: sc_module {
 
 	  mem_reset();                                      // Reset memory
 
-	  //cout << sc_time_stamp() << " MEMORY: Reset requested" << endl;
+//	  cout << sc_time_stamp() << " MEMORY: Reset requested" << endl;
 	
 	}
 
