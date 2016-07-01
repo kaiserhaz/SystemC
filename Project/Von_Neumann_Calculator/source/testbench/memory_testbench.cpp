@@ -51,7 +51,7 @@ int main() {
 
 	sc_trace_file *tf = sc_create_vcd_trace_file("wave_mem");
 	sc_write_comment(tf, "Memory simulation");
-	tf->set_time_unit(1, SC_PS);
+	tf->set_time_unit(1, SC_NS);
 
 	sc_trace(tf,_clk,"_clk");
 	sc_trace(tf,_rst_n,"_rst_n");

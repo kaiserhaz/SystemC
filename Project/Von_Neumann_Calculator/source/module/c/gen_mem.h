@@ -31,7 +31,7 @@ struct gen_mem: sc_module {
 
     // Register callback for incoming b_transport interface method call
     mem_socket.register_b_transport(this, &gen_mem::b_transport);
-	dont_initialize(); // Mark to not initialize thread
+    dont_initialize();                                  // Mark to not initialize thread
 
     // Initialize memory with random data
     mem_reset();
@@ -92,10 +92,10 @@ struct gen_mem: sc_module {
 
   unsigned short mem[MEM_SIZE];                         // Memory array instance
 
-  void mem_reset() {
+  void mem_reset() {                                    // Memory reset procedure
 
 	  for (int i = 0; i < MEM_SIZE; i++)
-		mem[i] = 0x21;                                  // 33 in decimals
+		mem[i] = 0x0021;                                // 33 in decimals
 
   }
 
