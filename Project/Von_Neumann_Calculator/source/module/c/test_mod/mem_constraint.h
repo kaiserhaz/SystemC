@@ -50,6 +50,7 @@ class mem_constraint: public scv_constraint_base {
 //		SCV_CONSTRAINT( m_t0->addr() < MEM_SIZE ); // Constraint on address
 		SCV_CONSTRAINT( m_t0->data() < 0x7E ); // Constraint on data, upper bound
 		SCV_CONSTRAINT( m_t0->data() > 0x21 ); // Constraint on data, lower bound
+//		SCV_CONSTRAINT( m_t0->r_nw() == false ); // Constraint on read-write operation
 
 	}
 
@@ -122,13 +123,13 @@ SC_MODULE( mem_constr_module ) {
 
 			RST_N->write(mem_c0->m_t0->rst_n);
 
-//			cout << sc_time_stamp() << " CONSTR_MOD: Transaction value:\n" << to_string() << endl;
+			cout << sc_time_stamp() << " CONSTR_MOD: New transaction value:\n" << to_string() << "\n" << endl;
 
 			if(mem_c0->m_t0->r_nw.read() == SC_LOGIC_1) { // Write case
 
 				mem_constr_write();           // Write data on line
 
-//				cout << sc_time_stamp() << " CONSTR_MOD: Value write \n" << endl;
+				cout << sc_time_stamp() << " CONSTR_MOD: Value write " << endl;
 
 			}
 
@@ -136,7 +137,7 @@ SC_MODULE( mem_constr_module ) {
 
 				mem_constr_read();            // Write data on line
 
-//				cout << sc_time_stamp() << " CONSTR_MOD: Value read: " << _data << "\n" << endl;
+				cout << sc_time_stamp() << " CONSTR_MOD: Value read: " << _data << endl;//<< "\n" << endl;
 
 			}
 
@@ -147,7 +148,7 @@ SC_MODULE( mem_constr_module ) {
 	/** Variables **/
 
 	unsigned int _n_test;                     // Number of test run
-//	signed short _data;                       // Data variable
+	signed short _data;                       // Data variable
 
     // Execute a write command according to a specific protocol
 	void mem_constr_write() {
@@ -161,7 +162,7 @@ SC_MODULE( mem_constr_module ) {
 		ADDR->write(mem_c0->m_t0->addr.read()); // Write address
 		DATAOUT->write(mem_c0->m_t0->data.read()); // Write data
 		
-//		wait(SC_ZERO_TIME);
+		wait(SC_ZERO_TIME);
 
 	}
 
@@ -171,9 +172,9 @@ SC_MODULE( mem_constr_module ) {
 		ADDR->write(mem_c0->m_t0->addr.read()); // Write address
 		R_NW->write(mem_c0->m_t0->r_nw.read()); // Write read/write
 
-//		wait(SC_ZERO_TIME);
+		wait(SC_ZERO_TIME);
 
-//		_data = DATAIN->read().to_int();        // Read data
+		_data = DATAIN->read().to_int();        // Read data
 
 	}
 

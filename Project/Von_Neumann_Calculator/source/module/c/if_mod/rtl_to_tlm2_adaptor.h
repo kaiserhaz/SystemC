@@ -39,15 +39,12 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
   SC_HAS_PROCESS( rtl_to_tlm2_adaptor );
 
   rtl_to_tlm2_adaptor(sc_module_name _name) : sc_module(_name),
-	                                          addr(0), data(0),
-                                              cmd(tlm::TLM_IGNORE_COMMAND)
+	                                          _addr(0), _data(0)
                                               { // Construct and name socket
 
     SC_THREAD(write_thread);                  // Register write thread
 
 	SC_THREAD(read_thread);                   // Register read thread (need this because method can't wait) 
-	
-	trans = new tlm::tlm_generic_payload;     // Create new payload instance
 	
   }
 
@@ -55,15 +52,14 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 	  
   /** Variables **/
 
-  signed short data;                          // Internal data buffer
-  uint64 addr;                                // Address word variable, used to interface between uint and sc_lv
-  
-  tlm::tlm_generic_payload* trans;            // Generic payload instance
-  tlm::tlm_command cmd;                       // TLM-2 generic payload transaction, reused across calls to b_transport
+  signed short _data;                         // Internal data buffer
+  uint64 _addr;                               // Address word variable, used to interface between uint and sc_lv
 
   /** Write thread **/
 
   void write_thread() {
+
+	  tlm::tlm_generic_payload* wr_gp = new tlm::tlm_generic_payload; // Generic payload instance for write thread
 
 	  while(true) {
 
@@ -73,7 +69,7 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 
 			cout << sc_time_stamp() << " ADAPTOR: Reseting" << endl;
 
-			mem_reset();                      // Call reset
+			mem_reset(wr_gp);                 // Call reset
 
 		}
 
@@ -81,7 +77,7 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 		
 			cout << sc_time_stamp() << " ADAPTOR: Command received: " << 'W' << endl;
 
-			mem_write();                      // Call write
+			mem_write(wr_gp);                 // Call write
 
 		}
 
@@ -93,9 +89,11 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 
   void read_thread() {
 
+	tlm::tlm_generic_payload* rd_gp = new tlm::tlm_generic_payload; // Generic payload instance for read thread
+
     while(true) {
 
-        wait(R_NW->default_event());          // Wait for buffer trigger
+        wait(ADDR->value_changed_event());    // Wait for buffer trigger
 		
 		if(!RST_N->read()) {
 
@@ -107,7 +105,7 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 
 			cout << sc_time_stamp() << " ADAPTOR: Command received: " << 'R' << endl;
 
-			mem_read();                       // Call read
+			mem_read(rd_gp);                  // Call read
 
         }
 
@@ -137,7 +135,11 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
   }
 
   // Local b_transport used to execute the standard TLM2 procedures
-  void local_b_transport(sc_time &delay) {
+  void local_b_transport(tlm::tlm_generic_payload* trans,
+						 tlm::tlm_command cmd,
+					     signed short& data,
+					     uint64 addr,
+						 sc_time &delay) {
 
 	  payload_setup(trans, cmd, data, addr);  // Payload setup
 
@@ -150,47 +152,49 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
   }
 
   // Memory write procedure
-  void mem_write() {
+  void mem_write(tlm::tlm_generic_payload* _gp) {
 
-      cmd = tlm::TLM_WRITE_COMMAND;           // Set command 
+      tlm::tlm_command _cmd = tlm::TLM_WRITE_COMMAND; // Set command 
 
-      addr = ADDR->read().to_uint64();        // Read address line
+      _addr = ADDR->read().to_uint64();       // Read address line
 	  
-      data = DATAIN->read().to_uint64();      // Read data line
+      _data = DATAIN->read().to_uint64();     // Read data line
 
-      local_b_transport(sc_time(MEM_DELAY, MEM_DELAY_UNIT)); // Call local b_transport
+      local_b_transport(_gp, _cmd, _data, _addr, sc_time(MEM_DELAY, MEM_DELAY_UNIT)); // Call local b_transport
 
-//      wait(SC_ZERO_TIME);                     // Wait 1 delta for data to update
+      wait(SC_ZERO_TIME);                     // Wait 1 delta for data to update
 
   }
   
   // Memory read procedure
-  void mem_read() {
+  void mem_read(tlm::tlm_generic_payload* _gp) {
 
-      cmd = tlm::TLM_READ_COMMAND;            // Set command 
+      tlm::tlm_command _cmd = tlm::TLM_READ_COMMAND; // Set command 
 
-      addr = ADDR->read().to_uint64();        // Read address line
+      _addr = ADDR->read().to_uint64();       // Read address line
+
+	  _data = 0;                              // Null data
       
-      local_b_transport(sc_time(MEM_DELAY, MEM_DELAY_UNIT)); // Call local b_transport
+      local_b_transport(_gp, _cmd, _data, _addr, sc_time(MEM_DELAY, MEM_DELAY_UNIT)); // Call local b_transport
 
-      DATAOUT->write(data);                   // Write data to line
+      DATAOUT->write(_data);                  // Write data to line
 
-//      wait(SC_ZERO_TIME);                     // Wait 1 delta for data to update
+      wait(SC_ZERO_TIME);                     // Wait 1 delta for data to update
 
   }
 
   // Memory reset procedure
-  void mem_reset() {
+  void mem_reset(tlm::tlm_generic_payload* _gp) {
 
-	  cmd = tlm::TLM_IGNORE_COMMAND;          // Set command 
+	  tlm::tlm_command _cmd = tlm::TLM_IGNORE_COMMAND; // Set command 
 
-      addr = 0;                               // Read address line
+      _addr = 0;                               // Read address line
  
-      data = 0;                               // Read data line
+      _data = 0;                               // Read data line
 
-      local_b_transport(sc_time(MEM_DELAY, MEM_DELAY_UNIT)); // Call local b_transport
+      local_b_transport(_gp, _cmd, _data, _addr, sc_time(MEM_DELAY, MEM_DELAY_UNIT)); // Call local b_transport
 
-	  //wait(SC_ZERO_TIME);                     // Wait 1 delta for data to update
+	  wait(SC_ZERO_TIME);                     // Wait 1 delta for data to update
 
   }
 
