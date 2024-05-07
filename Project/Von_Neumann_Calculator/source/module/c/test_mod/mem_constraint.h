@@ -9,7 +9,7 @@
 /** Includes **/
 #include <systemc.h>
 #include <scv.h>
-#include "..\vnc_inc.h"
+#include "../../../vnc_inc.h"
 
 /** SCV Extension for mem_trans type **/
 template<> class scv_extensions<mem_trans>: public scv_extensions_base<mem_trans> {

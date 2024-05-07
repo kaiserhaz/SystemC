@@ -10,7 +10,7 @@
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 
 /** Includes **/
-#include "..\vnc_inc.h"
+#include "../../../vnc_inc.h"
 #include <tlm.h>
 #include <tlm_utils/simple_initiator_socket.h>
 
@@ -139,7 +139,9 @@ struct rtl_to_tlm2_adaptor: public sc_channel {
 						 tlm::tlm_command cmd,
 					     signed short& data,
 					     uint64 addr,
-						 sc_time &delay) {
+//						 sc_time &delay) {
+						 sc_time delay) {
+
 
 	  payload_setup(trans, cmd, data, addr);  // Payload setup
 

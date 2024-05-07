@@ -15,6 +15,8 @@ OPENCV_LIBS = core highgui calib3d dnn features2d flann gapi imgcodecs imgproc m
 CXX=g++
 CXXFLAGS=-std=c++17 -Wall
 CPPFLAGS=-I$(SYSTEMC_HOME)/include -I$(SYSTEMC_AMS_HOME)/include -I$(OPENCV_HOME)
+#CPPFLAGS+= -D_PRINT_DBG_=1
+#CPPFLAGS+= -D_TRACE_DBG_=1
 LDFLAGS=-L$(SYSTEMC_HOME)/lib-$(ARCH) -L$(SYSTEMC_AMS_HOME)/lib-$(ARCH) -L/usr/local/lib
 LDLIBS=$(addprefix -lopencv_, $(OPENCV_LIBS)) -lsystemc-ams -lsystemc
 

@@ -5,10 +5,11 @@
 #include "../module/c/memory.h"
 #include "../module/c/test_mod/mem_constraint.h"
 #include <time.h>
+#include <scv.h>
 
 #define N_TEST_RUN 4096
 
-int main() {
+int sc_main(int, char* []) {
 
 	scv_random::set_global_seed(time(NULL));  // Random generator seeding
 
@@ -68,7 +69,7 @@ int main() {
 	
 	sc_close_vcd_trace_file(tf);              // Close tracefile
 
-	system("pause");                          // Pause
+	system("sleep 2");                        // Pause
 
 	return 0;
 

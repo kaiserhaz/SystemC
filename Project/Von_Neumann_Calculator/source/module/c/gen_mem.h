@@ -10,7 +10,7 @@
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 
 /** Includes **/
-#include "..\vnc_inc.h"
+#include "../../vnc_inc.h"
 #include <tlm.h>
 #include <tlm_utils/simple_target_socket.h>
 
