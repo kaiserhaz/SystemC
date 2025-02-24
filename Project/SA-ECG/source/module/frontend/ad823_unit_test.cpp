@@ -69,7 +69,7 @@ int sc_main(int argc, char *argv[]) {
 	sca_util::sca_trace(actf, sig_out , "out");
 
 	// Simulation start
-	sca_ac_start(100, 1E5, 64,  sca_ac_analysis::SCA_LOG);
+	sca_ac_start(100, 1E8, 55,  sca_ac_analysis::SCA_LOG);
 	
 	printf("> ad823_unit_test : Simulation done\r\n");
 

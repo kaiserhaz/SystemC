@@ -1,3 +1,6 @@
+TARGET_NAME:=$(TARGET)
+TARGET_FILE:=$(TARGET_NAME).cpp
+
 SRC_DIRS=.
 BLD_DIR=build
 
@@ -15,11 +18,12 @@ LDLIBS=-lsystemc -lsystemc-ams
 help:
 	@echo "Hello!"
 	@echo "Use the following rules to make the programme:"
-	@echo "	exe  : Makes the executable."
+	@echo "	exe  : Makes the executable. Please provide the filename in TARGET var."
 	@echo "	clean: cleans all the temp files."
 
 clean:
 	rm -rf build
+	rm *.exe
 	@echo "Done cleaning."
 
 $(BLD_DIR)/$(TARGET_NAME).o: $(SRC_DIRS)/$(TARGET_FILE)
@@ -32,10 +36,6 @@ $(BLD_DIR)/$(TARGET_NAME).o: $(SRC_DIRS)/$(TARGET_FILE)
 	@echo "Running compiler."
 	$(CXX) -c -v $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 
-ad823_unit_test: TARGET_NAME:=ad823_unit_test
-ad823_unit_test: TARGET_FILE:=$(TARGET_NAME).cpp
-ad823_unit_test: 
-
 exe: $(BLD_DIR)/$(TARGET_NAME).o
 	@echo "###-----------------------###"
 	@echo "### MAKING EXE FILE NEXTT ###"
@@ -43,3 +43,4 @@ exe: $(BLD_DIR)/$(TARGET_NAME).o
 	@echo "Running linker."
 	$(CXX) -v $^ -o $(TARGET_NAME).$@ $(LDFLAGS) $(LDLIBS)
  
+.PHONY: clean exe
