@@ -6,6 +6,7 @@
  * -- Versioning Info --
  *
  * v1.0 : 19/02/2025 : Initial working config write-up.
+ * v2.0 : 25/02/2025 : Modified vpulsesource; working as intended now.
  *
  * @copyright
  * Copyright 2025 British Malaysian Institute, Universiti Kuala Lumpur.
@@ -166,7 +167,7 @@ int sc_main(int argc, char *argv[]) {
 	c_l.p(sig_out);
 	c_l.n(gnd);
 	
-	v_pulse_conv.set_timestep(1000.0, SC_US);
+	v_pulse_conv.set_timestep(1.0, SC_MS);
 	
 	// Output tracefile
 	sca_util::sca_trace_file *trtf = sca_util::sca_create_tabular_trace_file("frontend_tr.dat");

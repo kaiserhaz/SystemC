@@ -6,6 +6,7 @@
  * -- Versioning Info --
  *
  * v1.0 : 19/02/2025 : Initial working config write-up.
+ * v2.0 : 25/02/2025 : Edited op amp pole values, and added 2nd stage.
  *
  * @copyright
  * Copyright 2025 British Malaysian Institute, Universiti Kuala Lumpur.
@@ -22,7 +23,7 @@
 #include <systemc-ams.h>
 
 // Defs
-#define _V_B_    2.5E-9
+#define _V_B_    0.0E-6
 #define _C_IN_   1.8E-12
 #define _R_IN_S_ 1.0E13
 #define _R_IN_D_ 1.0E10
@@ -204,7 +205,7 @@ SC_MODULE( ad823 ) {
 	                  g22side,
 	                  g23side,
 	                  g24side,
-					  oside  ;
+                      oside  ;
 	
 };
 

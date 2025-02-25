@@ -24,6 +24,7 @@ help:
 clean:
 	rm -rf build
 	rm *.exe
+	rm *.dat
 	@echo "Done cleaning."
 
 $(BLD_DIR)/$(TARGET_NAME).o: $(SRC_DIRS)/$(TARGET_FILE)
