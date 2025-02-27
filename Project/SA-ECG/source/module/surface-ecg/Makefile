@@ -1,24 +1,30 @@
-TARGET_NAME:=$(TARGET)
+TARGET_NAME:=surface_ecg
 TARGET_FILE:=$(TARGET_NAME).cpp
+AUX_NAME:=gen_ecg
+AUX_FILE:=$(AUX_NAME).cpp
 
 SRC_DIRS=.
 BLD_DIR=build
 
-SYSTEMC_HOME=/mnt/c/SystemC/systemc-2.3.4
-SYSTEMC_AMS_HOME=/mnt/c/SystemC/systemc-ams-2.3.4
+#SYSTEMC_HOME=/mnt/c/SystemC/systemc-2.3.4
+#SYSTEMC_AMS_HOME=/mnt/c/SystemC/systemc-ams-2.3.4
+OCTAVE_INCLUDE=/usr/include/octave-7.3.0
+OCTAVE_LIB=/usr/lib/x86_64-linux-gnu/octave/7.3.0
 
 ARCH=linux64
 
 CXX=g++
 CXXFLAGS=-std=c++17 -Wall
-CPPFLAGS=-I$(SYSTEMC_HOME)/include -I$(SYSTEMC_AMS_HOME)/include
-LDFLAGS=-L$(SYSTEMC_HOME)/lib-$(ARCH) -L$(SYSTEMC_AMS_HOME)/lib-$(ARCH)
-LDLIBS=-lsystemc -lsystemc-ams
+CPPFLAGS=-I$(OCTAVE_INCLUDE)
+LDFLAGS=-L$(OCTAVE_LIB) -Wl,-rpath,$(shell octave-config -p OCTLIBDIR)
+LDLIBS=-loctinterp -loctave
+OXX=mkoctfile
+OXXFLAGS=--link-stand-alone
 
 help:
 	@echo "Hello!"
 	@echo "Use the following rules to make the programme:"
-	@echo "	exe   : Makes the executable. Please provide the filename in TARGET var."
+	@echo "	exe   : Makes the executable."
 	@echo "	clean : cleans all the temp files and build directory."
 
 clean-build:
@@ -39,7 +45,7 @@ endif
 clean: clean-build clean-exe clean-run
 	@echo "Done cleaning."
 
-$(BLD_DIR)/$(TARGET_NAME).o: $(SRC_DIRS)/$(TARGET_FILE)
+$(BLD_DIR)/%.o: $(SRC_DIRS)/%.cpp
 	@echo "###-----------------------###"
 	@echo "### MAKING OBJ FILE FIRST ###"
 	@echo "###-----------------------###"
@@ -49,11 +55,11 @@ $(BLD_DIR)/$(TARGET_NAME).o: $(SRC_DIRS)/$(TARGET_FILE)
 	@echo "Running compiler."
 	$(CXX) -c -v $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 
-exe: $(BLD_DIR)/$(TARGET_NAME).o
+exe: $(BLD_DIR)/$(TARGET_NAME).o $(BLD_DIR)/$(AUX_NAME).o
 	@echo "###-----------------------###"
 	@echo "### MAKING EXE FILE NEXTT ###"
 	@echo "###-----------------------###"
 	@echo "Running linker."
-	$(CXX) -v $^ -o $(TARGET_NAME).$@ $(LDFLAGS) $(LDLIBS)
+	$(OXX) -v $^ -o $(TARGET_NAME).$@ $(OXXFLAGS) $(LDFLAGS) $(LDLIBS)
  
 .PHONY: clean exe
