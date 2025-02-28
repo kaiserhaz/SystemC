@@ -7,6 +7,7 @@
  *
  * v1.0 : 19/02/2025 : Initial working config write-up.
  * v2.0 : 25/02/2025 : Modified vpulsesource; working as intended now.
+ * v3.0 : 28/02/2025 : Added working ECG generator.
  *
  * @copyright
  * Copyright 2025 British Malaysian Institute, Universiti Kuala Lumpur.
