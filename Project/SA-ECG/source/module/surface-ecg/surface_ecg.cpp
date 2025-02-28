@@ -1,5 +1,5 @@
 /**
- * @file surface_ecg_test.cpp
+ * @file surface_ecg.cpp
  *
  * @brief ECG simulator bench.
  * 

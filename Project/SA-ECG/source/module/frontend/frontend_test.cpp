@@ -1,5 +1,5 @@
 /**
- * @file frontend_unit_test.cpp
+ * @file frontend_test.cpp
  *
  * @brief Simulation unit test file for frontend model.
  * 
@@ -18,13 +18,17 @@
  // Libs
 #include <systemc.h>
 #include "frontend.h"
+#include "../surface-ecg/gen_ecg.h"
 #include <cmath>
+#include <iostream>
+#include <fstream>
+#include <queue>
+#include <sstream> 
 
 // Defs
-#define _T_SIM_   12.0
 #define _A_SINE_  311.0
 #define _F_SINE_  50.0
-#define _A_PULSE_ 5.0E-4
+#define _ECG_DAT_FILE_ "../surface-ecg/ecgSig.dat"
 
 // Sine source definition in TDF (for ease of process using math tools)
 SCA_TDF_MODULE( vsinesource ){
@@ -45,41 +49,65 @@ SCA_TDF_MODULE( vsinesource ){
 	
 };
 
-// Pulsed source definition in TDF (for ease of process using math tools)
-SC_MODULE( vpulsesource ){
+// ECG generator
+SCA_TDF_MODULE( ecggenerator ){
 	
-	sc_in_clk clk_in;
-	sc_out<double> pulse_out;
+	sca_tdf::sca_out<double> out;
 	
-	SC_CTOR( vpulsesource ) :
-		clk_in("clk_in")      ,
-		pulse_out("pulse_out"),
-		pulse_cnt(0)
-	{
-		SC_METHOD(pulse);
-			sensitive << clk_in.pos();
-	}
+	SCA_CTOR( ecggenerator ) :
+		out("out"),
+		file(),
+		ecg_data()
+	{}
 	
 	private:
 	
-	unsigned int pulse_cnt=0;
+	std::ifstream file;
+	std::queue<double> ecg_data;
 	
-	void pulse()
-	{	
-		if (pulse_cnt==0)               
+	void set_attributes()
+	{
+		int status = gen_ecg();
+		
+		if(status!=0)
 		{
-			pulse_out->write(1.0);
+			SC_REPORT_ERROR(this->name(),"Error occurred in ECG elaboration!");
 		}
 		
-		if (pulse_cnt==120)             // 120ms
-		{
-			pulse_out->write(0.0);
+		file.open(_ECG_DAT_FILE_);
+		
+		if (!file.is_open()) {
+			SC_REPORT_ERROR(this->name(),"Unable to open file!");
 		}
 		
-		pulse_cnt += 1;
-		pulse_cnt %= 990;
+		std::string line;
 		
-		next_trigger(clk_in.posedge_event());
+		while (std::getline(file, line)) {
+			std::stringstream ss(line);
+			std::string value;
+			
+			while (std::getline(ss, value)) {
+				try {
+					ecg_data.push(std::stod(value));
+				} catch (const std::invalid_argument& e) {
+					SC_REPORT_ERROR(this->name(),"Invalid number format");
+				}
+			}
+		}
+		
+		file.close();
+		
+		SC_REPORT_INFO(this->name(),"ECG signal loaded. There are ");
+		printf("%lu samples available.\r\n", ecg_data.size());
+	}
+	
+	void processing()
+	{
+		if(ecg_data.empty())
+			sc_stop();
+		
+		out.write( ecg_data.front() );
+		ecg_data.pop();
 	}
 	
 };
@@ -91,14 +119,11 @@ int sc_main(int argc, char *argv[]) {
 
 	// Bench-level components
 	
-	// Clock
-	sc_clock                            pulse_clk("pulse_clk", 1.0, SC_MS);
-	
 	// Human-sector coupling model
 	vsinesource                         v_sector("v_sector");
-	vpulsesource                        v_pulse("v_pulse");
+	ecggenerator                        v_ecg("v_ecg");
 	sca_eln::sca_tdf_vsource            v_sector_conv("v_sector_conv");
-	sca_eln::sca_de::sca_vsource        v_pulse_conv("v_pulse_conv", _A_PULSE_);
+	sca_eln::sca_tdf_vsource            v_ecg_conv("v_ecg_conv", 1e-3);
 	sca_eln::sca_r                      r_bd("r_bd", 1E2);
 	sca_eln::sca_c                      c_pb("c_pb", 2E-12, sca_util::SCA_UNDEFINED),
 	                                    c_bg("c_bg", 150E-12, sca_util::SCA_UNDEFINED);
@@ -113,8 +138,8 @@ int sc_main(int argc, char *argv[]) {
 	sca_eln::sca_r                      r_l("r_l", 2E3);
 	sca_eln::sca_c                      c_l("c_l", 15E-9, sca_util::SCA_UNDEFINED);
 	
-	sca_tdf::sca_signal<double>         sig_sine;
-	sc_signal<double>                   sig_pulse;
+	sca_tdf::sca_signal<double>         sig_sine,
+	                                    sig_ecg;
 	sca_eln::sca_node                   sig_sector_p,
 	                                    sig_in_p,
 	                                    sig_in_n,
@@ -135,11 +160,10 @@ int sc_main(int argc, char *argv[]) {
 	c_pb.p(sig_sector_p);
 	c_pb.n(sig_in_el_p);
 	
-	v_pulse.clk_in(pulse_clk);
-	v_pulse.pulse_out(sig_pulse);
-	v_pulse_conv.inp(sig_pulse);
-	v_pulse_conv.p(sig_in_el_p);
-	v_pulse_conv.n(sig_bd);
+	v_ecg.out(sig_ecg);
+	v_ecg_conv.inp(sig_ecg);
+	v_ecg_conv.p(sig_in_el_p);
+	v_ecg_conv.n(sig_bd);
 	
 	r_bd.p(sig_bd);
 	r_bd.n(sig_in_el_n);
@@ -167,7 +191,7 @@ int sc_main(int argc, char *argv[]) {
 	c_l.p(sig_out);
 	c_l.n(gnd);
 	
-	v_pulse_conv.set_timestep(1.0, SC_MS);
+	v_ecg_conv.set_timestep(100.0, SC_US);
 	
 	// Output tracefile
 	sca_util::sca_trace_file *trtf = sca_util::sca_create_tabular_trace_file("frontend_tr.dat");
@@ -179,9 +203,9 @@ int sc_main(int argc, char *argv[]) {
 
 	// Simulation start
 	sca_core::sca_set_default_solver_parameter("sca_linear_solver","algorithm","euler");
-	sc_start(_T_SIM_, SC_SEC);
+	sc_start();
 	
-	printf("> frontend_unit_test : Simulation done\r\n");
+	printf("> frontend_test : Simulation done\r\n");
 
 	system("sleep 1");
 

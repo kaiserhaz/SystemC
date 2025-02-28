@@ -3,11 +3,9 @@ TARGET_FILE:=$(TARGET_NAME).cpp
 AUX_NAME:=gen_ecg
 AUX_FILE:=$(AUX_NAME).cpp
 
-SRC_DIRS=.
+SRC_DIR=.
 BLD_DIR=build
 
-#SYSTEMC_HOME=/mnt/c/SystemC/systemc-2.3.4
-#SYSTEMC_AMS_HOME=/mnt/c/SystemC/systemc-ams-2.3.4
 OCTAVE_INCLUDE=/usr/include/octave-7.3.0
 OCTAVE_LIB=/usr/lib/x86_64-linux-gnu/octave/7.3.0
 
@@ -45,15 +43,19 @@ endif
 clean: clean-build clean-exe clean-run
 	@echo "Done cleaning."
 
-$(BLD_DIR)/%.o: $(SRC_DIRS)/%.cpp
+$(BLD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "###-----------------------###"
 	@echo "### MAKING OBJ FILE FIRST ###"
 	@echo "###-----------------------###"
-	if [ ! -d "$(BLD_DIR)" ]; then \
-		mkdir "$(BLD_DIR)";        \
-	fi
+ifeq (,$(wildcard $(BLD_DIR)))
+	mkdir "$(BLD_DIR)";
+endif
 	@echo "Running compiler."
+ifeq (0,$MAKELEVEL)
 	$(CXX) -c -v $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+else
+	$(CXX) -c -v $(CPPFLAGS) $(CXXFLAGS) -DS_PATH=\"$(AUX_DIR)/\" $^ -o $@
+endif
 
 exe: $(BLD_DIR)/$(TARGET_NAME).o $(BLD_DIR)/$(AUX_NAME).o
 	@echo "###-----------------------###"

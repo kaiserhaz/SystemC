@@ -58,7 +58,7 @@ int gen_ecg()
 
       // Tell the interpreter that we're ready to execute commands:
 
-      int status = interpreter.execute ();
+      int status = interpreter.execute();
 
       if (status != 0)
         {
@@ -69,7 +69,7 @@ int gen_ecg()
 	  
 	  std::cout << "> gen_ecg : Executing..." << std::endl;
 	  
-      octave_value_list out = interpreter.feval ("gen_ecg");
+      octave_value_list out = interpreter.eval ("run(\"" S_PATH "gen_ecg\")", 0);
     }
   catch (const octave::exit_exception& ex)
     {
